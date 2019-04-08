@@ -1,0 +1,225 @@
+{
+	"basePath": "/v1",
+	"consumes": [
+		"application/json"
+	],
+	"definitions": {
+		"NotificationEvent": {
+			"properties": {
+				"correlationId": {
+					"type": "string"
+				},
+				"noticeNumber": {
+					"type": "string"
+				},
+				"noticeTypeCd": {
+					"type": "string"
+				},
+				"eventTypeCd": {
+					"type": "string"
+				},
+				"eventDt": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"correlationId",
+				"noticeNumber",
+				"noticeTypeCd",
+				"eventTypeCd",
+				"eventDt"
+			],
+			"type": "object"
+		}
+	},
+	"info": {
+		"title": "carma-api",
+		"version": "1.0.0",
+		"description": "Carma System Api",
+		"license": {
+			"name": "Apache"
+		}
+	},
+	"paths": {
+		"/Notifications": {
+			"get": {
+				"operationId": "GetNotifications",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/NotificationEvent"
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateNotification",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/NotificationEvent"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "model",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/NotificationEvent"
+						}
+					}
+				]
+			}
+		},
+		"/Notifications/{id}": {
+			"get": {
+				"operationId": "GetNotificationById",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/NotificationEvent"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateNotification",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/NotificationEvent"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "model",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/NotificationEvent"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteNotification",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"deprecated": true,
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/token": {
+			"get": {
+				"operationId": "GetToken",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "object"
+						}
+					}
+				},
+				"security": [
+					{
+						"siteminder": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/token/delete": {
+			"post": {
+				"operationId": "Logout",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "object"
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"produces": [
+		"application/json"
+	],
+	"swagger": "2.0",
+	"securityDefinitions": {
+		"siteminder": {
+			"type": "apiKey",
+			"name": "smgov_userguid",
+			"in": "header"
+		},
+		"jwt": {
+			"type": "apiKey",
+			"in": "cookie",
+			"name": "app_token"
+		}
+	},
+	"host": "localhost:3000"
+}
