@@ -26,6 +26,7 @@ import { TypedEvent } from '../common/TypedEvent';
 import { retreiveCookieValue } from '../common/cookieUtils';
 import { 
 
+    NotificationEventResponse,
     NotificationEvent 
 } from "./models"
 
@@ -141,35 +142,10 @@ export default class Client {
         }
     }
 
-    public async GetNotifications():Promise<Array<NotificationEvent>>{
-        return this.tryRequest<Array<NotificationEvent>>(async () => {
-            const response: superAgent.Response = await this.agent.get(`/Notifications`)
-            return response;
-        });
-    }    
-    public async CreateNotification( model:NotificationEvent ):Promise<NotificationEvent>{
-        return this.tryRequest<NotificationEvent>(async () => {
+    public async SendNotification( model:NotificationEvent ):Promise<NotificationEventResponse>{
+        return this.tryRequest<NotificationEventResponse>(async () => {
             const response: superAgent.Response = await this.agent.post(`/Notifications`)
                 .send(model)
-            return response;
-        });
-    }    
-    public async GetNotificationById( id:string ):Promise<NotificationEvent>{
-        return this.tryRequest<NotificationEvent>(async () => {
-            const response: superAgent.Response = await this.agent.get(`/Notifications/${id}`)
-            return response;
-        });
-    }    
-    public async UpdateNotification( id:string , model:NotificationEvent ):Promise<NotificationEvent>{
-        return this.tryRequest<NotificationEvent>(async () => {
-            const response: superAgent.Response = await this.agent.put(`/Notifications/${id}`)
-                .send(model)
-            return response;
-        });
-    }    
-    public async DeleteNotification( id:string ):Promise<void>{
-        return this.tryRequest<void>(async () => {
-            const response: superAgent.Response = await this.agent.delete(`/Notifications/${id}`)
             return response;
         });
     }    

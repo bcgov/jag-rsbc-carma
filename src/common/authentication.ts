@@ -1,7 +1,7 @@
 
 const SCOPE_ASSERTION_MESSAGE = "JWT did not have required scope for this action";
-const SITEMINDER_AUTH_ERROR_MESSAGE = "Couldn't authenticate request.";
-export const SITEMINDER_AUTH_ERROR = new Error(SITEMINDER_AUTH_ERROR_MESSAGE);
+const AUTH_ERROR_MESSAGE = "Couldn't authenticate request.";
+export const AUTH_ERROR = new Error(AUTH_ERROR_MESSAGE);
 export const JWT_AUTH_ERROR = new Error(SCOPE_ASSERTION_MESSAGE);
 
 export const SITEMINDER_HEADER_USERGUID = 'smgov_userguid';
@@ -23,7 +23,7 @@ export interface Scopes {
 export type Scope = Scopes[keyof (Scopes)];
 
 /**
- * The payload of a compact JWT token within the Sheriff Scheduling application.
+ * The payload of a compact JWT token within the application.
  *
  * @export
  * @interface TokenPayload
@@ -34,6 +34,17 @@ export interface TokenPayload {
     userId?: string;
     type?: string;
     scopes?: Scope[];
+}
+
+/**
+ * The payload of a basic auth token.
+ *
+ * @export
+ * @interface BasicAuthPayload
+ */
+export interface BasicAuthPayload {
+    username: string;
+    password: string;
 }
 
 /**

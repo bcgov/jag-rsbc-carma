@@ -4,14 +4,15 @@ import { Security as TSOASecurity } from 'tsoa';
 import {
     Scope,
     assertAllScopes,
-    SITEMINDER_AUTH_ERROR,
+    AUTH_ERROR,
     SITEMINDER_HEADER_USERGUID,
     SITEMINDER_HEADER_USERDISPLAYNAME,
     SITEMINDER_HEADER_USERIDENTIFIER,
     SITEMINDER_HEADER_USERTYPE,
     TokenPayload,
     DEFAULT_SCOPES,
-    TOKEN_COOKIE_NAME
+    TOKEN_COOKIE_NAME,
+    BasicAuthPayload
 } from './common/authentication';
 import { verifyToken } from './infrastructure/token';
 
@@ -20,7 +21,7 @@ import { verifyToken } from './infrastructure/token';
  * siteminder -> extracts user information from siteminder headers
  * jwt -> extracs user information / scopes from JSON Web Token
  */
-export type SecurityType = "siteminder" | "jwt";
+export type SecurityType = "siteminder" | "jwt" | "basic";
 
 /**
  * Wrapper around TSOA Security decorator to give us type safety
@@ -86,6 +87,22 @@ function getTokenPayloadFromHeaders(request: Request): TokenPayload {
 }
 
 /**
+ * Parses a basic auth token from request headers if they are present
+ * @param {Request} request
+ * @returns {TokenPayload}
+ */
+function getBasicAuthPayloadFromHeaders(request: Request): BasicAuthPayload {
+    const { headers = {} } = request;
+    const base64Credentials =  headers.authorization.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    const [username, password] = credentials.split(':');
+    return {
+        username: username,
+        password: password,
+    }
+}
+
+/**
  * The authentication middleware used by TSOA 
  * see https://github.com/lukeautry/tsoa#authentication
  * 
@@ -98,20 +115,29 @@ function getTokenPayloadFromHeaders(request: Request): TokenPayload {
 export async function koaAuthentication(request: Request, securityName: string, securityScopes: string[] = DEFAULT_SCOPES): Promise<any> {
     const securityType: SecurityType = securityName as any;
     const scopes: Scope[] = securityScopes as any;
-    if (securityType === 'siteminder') {
-        const siteminderHeaders = getTokenPayloadFromHeaders(request);
-        if (siteminderHeaders && siteminderHeaders.guid) {
-            return siteminderHeaders;
-        } else {
-            throw SITEMINDER_AUTH_ERROR
-        }
-    }
 
-    if (securityType === 'jwt') {
-        const token = request.ctx.cookies.get(TOKEN_COOKIE_NAME);
-        const payload = await verifyToken(token);
-        assertAllScopes(payload, scopes);
-        return payload;
+    switch (securityType) {
+        case 'siteminder':
+            const siteminderHeaders = getTokenPayloadFromHeaders(request);
+            if (siteminderHeaders && siteminderHeaders.guid) {
+                return siteminderHeaders;
+            } else {
+                throw AUTH_ERROR
+            }
+        case 'jwt':
+            const token = request.ctx.cookies.get(TOKEN_COOKIE_NAME);
+            const payload = await verifyToken(token);
+            assertAllScopes(payload, scopes);
+            return payload;
+        case 'basic':
+            const basicAuthHeaders = getBasicAuthPayloadFromHeaders(request);
+            if (basicAuthHeaders && basicAuthHeaders.password == process.env.API_PASSWORD && basicAuthHeaders.username == process.env.API_USERNAME)
+            {
+                return basicAuthHeaders;
+            } else {
+                throw AUTH_ERROR
+            }
+        break;
     }
 
     throw new Error('Unknown Security Type');

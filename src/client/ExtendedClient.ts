@@ -74,9 +74,4 @@ export default class ExtendedClient extends Client {
             }
         }
     }
-    async GetNotificationById(id: string): Promise<NotificationEvent> {
-        return await this.nullOn404(
-            () => super.GetNotificationById(id)
-        );
-    }
 }
