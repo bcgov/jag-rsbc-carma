@@ -4,6 +4,22 @@
 		"application/json"
 	],
 	"definitions": {
+		"NotificationEventResponse": {
+			"properties": {
+				"respCd": {
+					"type": "number",
+					"format": "double"
+				},
+				"respMsg": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"respCd",
+				"respMsg"
+			],
+			"type": "object"
+		},
 		"NotificationEvent": {
 			"properties": {
 				"correlationId": {
@@ -42,27 +58,8 @@
 	},
 	"paths": {
 		"/Notifications": {
-			"get": {
-				"operationId": "GetNotifications",
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"schema": {
-							"type": "array",
-							"items": {
-								"$ref": "#/definitions/NotificationEvent"
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": []
-			},
 			"post": {
-				"operationId": "CreateNotification",
+				"operationId": "SendNotification",
 				"produces": [
 					"application/json"
 				],
@@ -70,11 +67,15 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"$ref": "#/definitions/NotificationEvent"
+							"$ref": "#/definitions/NotificationEventResponse"
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"basic": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "body",
@@ -83,83 +84,6 @@
 						"schema": {
 							"$ref": "#/definitions/NotificationEvent"
 						}
-					}
-				]
-			}
-		},
-		"/Notifications/{id}": {
-			"get": {
-				"operationId": "GetNotificationById",
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"schema": {
-							"$ref": "#/definitions/NotificationEvent"
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"type": "string"
-					}
-				]
-			},
-			"put": {
-				"operationId": "UpdateNotification",
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"schema": {
-							"$ref": "#/definitions/NotificationEvent"
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"type": "string"
-					},
-					{
-						"in": "body",
-						"name": "model",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/NotificationEvent"
-						}
-					}
-				]
-			},
-			"delete": {
-				"operationId": "DeleteNotification",
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"deprecated": true,
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"type": "string"
 					}
 				]
 			}

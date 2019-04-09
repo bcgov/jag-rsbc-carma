@@ -30,6 +30,12 @@ import { TokenController } from './controllers/TokenController';
 import { koaAuthentication } from './authentication';
 
 const models: TsoaRoute.Models = {
+    "NotificationEventResponse": {
+        "properties": {
+            "respCd": { "dataType": "double", "required": true },
+            "respMsg": { "dataType": "string", "required": true },
+        },
+    },
     "NotificationEvent": {
         "properties": {
             "correlationId": { "dataType": "string", "required": true },
@@ -42,58 +48,8 @@ const models: TsoaRoute.Models = {
 };
 
 export function RegisterRoutes(router: any) {
-    router.get('/v1/Notifications',
-        async (context, next) => {
-            const args = {
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, context);
-            } catch (error) {
-                context.status = error.status || 500;
-                context.body = error;
-                return next();
-            }
-
-            // Create the currentUser from the context and bind it to the ioc container
-            const currentUserProvider: Provider = {
-                get: () => new CurrentUser(context.request.user)
-            }
-            Container.bind(CurrentUser).provider(currentUserProvider);
-            // Using the typescript-ioc container, retrieve controller
-            const controller = Container.get(NotificationController) as NotificationController;
-
-            const promise = controller.getNotifications.apply(controller, validatedArgs);
-            return promiseHandler(controller, promise, context, next);
-        });
-    router.get('/v1/Notifications/:id',
-        async (context, next) => {
-            const args = {
-                id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, context);
-            } catch (error) {
-                context.status = error.status || 500;
-                context.body = error;
-                return next();
-            }
-
-            // Create the currentUser from the context and bind it to the ioc container
-            const currentUserProvider: Provider = {
-                get: () => new CurrentUser(context.request.user)
-            }
-            Container.bind(CurrentUser).provider(currentUserProvider);
-            // Using the typescript-ioc container, retrieve controller
-            const controller = Container.get(NotificationController) as NotificationController;
-
-            const promise = controller.getNotificationById.apply(controller, validatedArgs);
-            return promiseHandler(controller, promise, context, next);
-        });
     router.post('/v1/Notifications',
+        authenticateMiddleware([{ "name": "basic" }]),
         async (context, next) => {
             const args = {
                 model: { "in": "body", "name": "model", "required": true, "ref": "NotificationEvent" },
@@ -116,61 +72,7 @@ export function RegisterRoutes(router: any) {
             // Using the typescript-ioc container, retrieve controller
             const controller = Container.get(NotificationController) as NotificationController;
 
-            const promise = controller.createNotification.apply(controller, validatedArgs);
-            return promiseHandler(controller, promise, context, next);
-        });
-    router.put('/v1/Notifications/:id',
-        async (context, next) => {
-            const args = {
-                id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
-                model: { "in": "body", "name": "model", "required": true, "ref": "NotificationEvent" },
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, context);
-            } catch (error) {
-                context.status = error.status || 500;
-                context.body = error;
-                return next();
-            }
-
-            // Create the currentUser from the context and bind it to the ioc container
-            const currentUserProvider: Provider = {
-                get: () => new CurrentUser(context.request.user)
-            }
-            Container.bind(CurrentUser).provider(currentUserProvider);
-            // Using the typescript-ioc container, retrieve controller
-            const controller = Container.get(NotificationController) as NotificationController;
-
-            const promise = controller.updateNotification.apply(controller, validatedArgs);
-            return promiseHandler(controller, promise, context, next);
-        });
-    router.delete('/v1/Notifications/:id',
-        async (context, next) => {
-            const args = {
-                id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
-                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, context);
-            } catch (error) {
-                context.status = error.status || 500;
-                context.body = error;
-                return next();
-            }
-
-            // Create the currentUser from the context and bind it to the ioc container
-            const currentUserProvider: Provider = {
-                get: () => new CurrentUser(context.request.user)
-            }
-            Container.bind(CurrentUser).provider(currentUserProvider);
-            // Using the typescript-ioc container, retrieve controller
-            const controller = Container.get(NotificationController) as NotificationController;
-
-            const promise = controller.deleteNotification.apply(controller, validatedArgs);
+            const promise = controller.sendNotification.apply(controller, validatedArgs);
             return promiseHandler(controller, promise, context, next);
         });
     router.get('/v1/token',
