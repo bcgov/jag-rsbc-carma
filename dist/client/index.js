@@ -17,4 +17,4 @@ __export(require("../common/tokenUtils"));
 __export(require("../common/authentication"));
 var _errors = __importStar(require("../common/Errors"));
 exports.Errors = _errors;
-//# sourceMappingURL=C:/Dev/carma-api/dist/client/index.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/client/index.js.map

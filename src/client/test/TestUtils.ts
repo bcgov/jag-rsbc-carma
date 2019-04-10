@@ -72,7 +72,7 @@ export default class TestUtils {
     }
 
     static async newTestNotification(notif: Partial<NotificationEvent> = {}): Promise<NotificationEvent> {
-        return await TestUtils.setupTestFixtures(api => api.CreateNotification({
+        return await TestUtils.setupTestFixtures(api => api.SendNotification({
             ...notif,
         })) as NotificationEvent;
     }

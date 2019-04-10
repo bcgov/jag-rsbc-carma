@@ -36,4 +36,4 @@ var TypedEvent = /** @class */ (function () {
     return TypedEvent;
 }());
 exports.TypedEvent = TypedEvent;
-//# sourceMappingURL=C:/Dev/carma-api/dist/common/TypedEvent.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/common/TypedEvent.js.map

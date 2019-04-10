@@ -72,8 +72,15 @@ var tsoa_1 = require("tsoa");
 var typescript_ioc_1 = require("typescript-ioc");
 var CurrentUser_1 = require("./infrastructure/CurrentUser");
 var NotificationController_1 = require("./controllers/NotificationController");
+var TokenController_1 = require("./controllers/TokenController");
 var authentication_1 = require("./authentication");
 var models = {
+    "NotificationEventResponse": {
+        "properties": {
+            "respCd": { "dataType": "double", "required": true },
+            "respMsg": { "dataType": "string", "required": true },
+        },
+    },
     "NotificationEvent": {
         "properties": {
             "correlationId": { "dataType": "string", "required": true },
@@ -86,53 +93,7 @@ var models = {
 };
 function RegisterRoutes(router) {
     var _this = this;
-    router.get('/v1/Notifications', authenticateMiddleware([{ "name": "jwt" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
-        var args, validatedArgs, currentUserProvider, controller, promise;
-        return __generator(this, function (_a) {
-            args = {};
-            validatedArgs = [];
-            try {
-                validatedArgs = getValidatedArgs(args, context);
-            }
-            catch (error) {
-                context.status = error.status || 500;
-                context.body = error;
-                return [2 /*return*/, next()];
-            }
-            currentUserProvider = {
-                get: function () { return new CurrentUser_1.CurrentUser(context.request.user); }
-            };
-            typescript_ioc_1.Container.bind(CurrentUser_1.CurrentUser).provider(currentUserProvider);
-            controller = typescript_ioc_1.Container.get(NotificationController_1.NotificationController);
-            promise = controller.getNotifications.apply(controller, validatedArgs);
-            return [2 /*return*/, promiseHandler(controller, promise, context, next)];
-        });
-    }); });
-    router.get('/v1/Notifications/:id', authenticateMiddleware([{ "name": "jwt" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
-        var args, validatedArgs, currentUserProvider, controller, promise;
-        return __generator(this, function (_a) {
-            args = {
-                id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
-            };
-            validatedArgs = [];
-            try {
-                validatedArgs = getValidatedArgs(args, context);
-            }
-            catch (error) {
-                context.status = error.status || 500;
-                context.body = error;
-                return [2 /*return*/, next()];
-            }
-            currentUserProvider = {
-                get: function () { return new CurrentUser_1.CurrentUser(context.request.user); }
-            };
-            typescript_ioc_1.Container.bind(CurrentUser_1.CurrentUser).provider(currentUserProvider);
-            controller = typescript_ioc_1.Container.get(NotificationController_1.NotificationController);
-            promise = controller.getNotificationById.apply(controller, validatedArgs);
-            return [2 /*return*/, promiseHandler(controller, promise, context, next)];
-        });
-    }); });
-    router.post('/v1/Notifications', authenticateMiddleware([{ "name": "jwt" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
+    router.post('/v1/Notifications', authenticateMiddleware([{ "name": "basic" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
         var args, validatedArgs, currentUserProvider, controller, promise;
         return __generator(this, function (_a) {
             args = {
@@ -152,40 +113,14 @@ function RegisterRoutes(router) {
             };
             typescript_ioc_1.Container.bind(CurrentUser_1.CurrentUser).provider(currentUserProvider);
             controller = typescript_ioc_1.Container.get(NotificationController_1.NotificationController);
-            promise = controller.createNotification.apply(controller, validatedArgs);
+            promise = controller.sendNotification.apply(controller, validatedArgs);
             return [2 /*return*/, promiseHandler(controller, promise, context, next)];
         });
     }); });
-    router.put('/v1/Notifications/:id', authenticateMiddleware([{ "name": "jwt" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
+    router.get('/v1/token', authenticateMiddleware([{ "name": "siteminder" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
         var args, validatedArgs, currentUserProvider, controller, promise;
         return __generator(this, function (_a) {
             args = {
-                id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
-                model: { "in": "body", "name": "model", "required": true, "ref": "NotificationEvent" },
-            };
-            validatedArgs = [];
-            try {
-                validatedArgs = getValidatedArgs(args, context);
-            }
-            catch (error) {
-                context.status = error.status || 500;
-                context.body = error;
-                return [2 /*return*/, next()];
-            }
-            currentUserProvider = {
-                get: function () { return new CurrentUser_1.CurrentUser(context.request.user); }
-            };
-            typescript_ioc_1.Container.bind(CurrentUser_1.CurrentUser).provider(currentUserProvider);
-            controller = typescript_ioc_1.Container.get(NotificationController_1.NotificationController);
-            promise = controller.updateNotification.apply(controller, validatedArgs);
-            return [2 /*return*/, promiseHandler(controller, promise, context, next)];
-        });
-    }); });
-    router.delete('/v1/Notifications/:id', authenticateMiddleware([{ "name": "jwt" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
-        var args, validatedArgs, currentUserProvider, controller, promise;
-        return __generator(this, function (_a) {
-            args = {
-                id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
             validatedArgs = [];
@@ -201,8 +136,32 @@ function RegisterRoutes(router) {
                 get: function () { return new CurrentUser_1.CurrentUser(context.request.user); }
             };
             typescript_ioc_1.Container.bind(CurrentUser_1.CurrentUser).provider(currentUserProvider);
-            controller = typescript_ioc_1.Container.get(NotificationController_1.NotificationController);
-            promise = controller.deleteNotification.apply(controller, validatedArgs);
+            controller = typescript_ioc_1.Container.get(TokenController_1.TokenController);
+            promise = controller.getToken.apply(controller, validatedArgs);
+            return [2 /*return*/, promiseHandler(controller, promise, context, next)];
+        });
+    }); });
+    router.post('/v1/token/delete', function (context, next) { return __awaiter(_this, void 0, void 0, function () {
+        var args, validatedArgs, currentUserProvider, controller, promise;
+        return __generator(this, function (_a) {
+            args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
+            validatedArgs = [];
+            try {
+                validatedArgs = getValidatedArgs(args, context);
+            }
+            catch (error) {
+                context.status = error.status || 500;
+                context.body = error;
+                return [2 /*return*/, next()];
+            }
+            currentUserProvider = {
+                get: function () { return new CurrentUser_1.CurrentUser(context.request.user); }
+            };
+            typescript_ioc_1.Container.bind(CurrentUser_1.CurrentUser).provider(currentUserProvider);
+            controller = typescript_ioc_1.Container.get(TokenController_1.TokenController);
+            promise = controller.logout.apply(controller, validatedArgs);
             return [2 /*return*/, promiseHandler(controller, promise, context, next)];
         });
     }); });
@@ -324,4 +283,4 @@ function RegisterRoutes(router) {
     }
 }
 exports.RegisterRoutes = RegisterRoutes;
-//# sourceMappingURL=C:/Dev/carma-api/dist/routes.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/routes.js.map

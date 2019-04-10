@@ -118,4 +118,4 @@ var TokenController = /** @class */ (function (_super) {
     return TokenController;
 }(tsoa_1.Controller));
 exports.TokenController = TokenController;
-//# sourceMappingURL=C:/Dev/carma-api/dist/controllers/TokenController.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/controllers/TokenController.js.map

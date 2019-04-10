@@ -11,4 +11,4 @@ function decodeJwt(token) {
     return undefined;
 }
 exports.decodeJwt = decodeJwt;
-//# sourceMappingURL=C:/Dev/carma-api/dist/common/tokenUtils.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/common/tokenUtils.js.map

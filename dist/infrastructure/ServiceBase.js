@@ -68,4 +68,4 @@ var ServiceBase = /** @class */ (function (_super) {
     return ServiceBase;
 }(CrudService_1.CrudService));
 exports.ServiceBase = ServiceBase;
-//# sourceMappingURL=C:/Dev/carma-api/dist/infrastructure/ServiceBase.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/infrastructure/ServiceBase.js.map

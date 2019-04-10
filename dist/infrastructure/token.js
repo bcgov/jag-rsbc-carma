@@ -108,4 +108,4 @@ function verifyToken(token, secret) {
     });
 }
 exports.verifyToken = verifyToken;
-//# sourceMappingURL=C:/Dev/carma-api/dist/infrastructure/token.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/infrastructure/token.js.map

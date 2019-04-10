@@ -1,4 +1,4 @@
-export declare const SITEMINDER_AUTH_ERROR: Error;
+export declare const AUTH_ERROR: Error;
 export declare const JWT_AUTH_ERROR: Error;
 export declare const SITEMINDER_HEADER_USERGUID = "smgov_userguid";
 export declare const SITEMINDER_HEADER_USERDISPLAYNAME = "smgov_userdisplayname";
@@ -15,7 +15,7 @@ export interface Scopes {
 */
 export declare type Scope = Scopes[keyof (Scopes)];
 /**
- * The payload of a compact JWT token within the Sheriff Scheduling application.
+ * The payload of a compact JWT token within the application.
  *
  * @export
  * @interface TokenPayload
@@ -26,6 +26,16 @@ export interface TokenPayload {
     userId?: string;
     type?: string;
     scopes?: Scope[];
+}
+/**
+ * The payload of a basic auth token.
+ *
+ * @export
+ * @interface BasicAuthPayload
+ */
+export interface BasicAuthPayload {
+    username: string;
+    password: string;
 }
 /**
  * Checks a TokenPayload for the given scope

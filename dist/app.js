@@ -42,7 +42,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var koa_1 = __importDefault(require("koa"));
 var koa_bodyparser_1 = __importDefault(require("koa-bodyparser"));
 var koa_router_1 = __importDefault(require("koa-router"));
-require("./controllers");
 var routes_1 = require("./routes");
 var koa_morgan_1 = __importDefault(require("koa-morgan"));
 var app = new koa_1.default();
@@ -162,4 +161,4 @@ app.on('error', function (err, ctx) {
     console.log(err);
 });
 exports.default = app;
-//# sourceMappingURL=C:/Dev/carma-api/dist/app.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/app.js.map

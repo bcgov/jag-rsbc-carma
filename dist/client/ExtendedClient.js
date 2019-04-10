@@ -141,18 +141,7 @@ var ExtendedClient = /** @class */ (function (_super) {
             });
         });
     };
-    ExtendedClient.prototype.GetNotificationById = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.nullOn404(function () { return _super.prototype.GetNotificationById.call(_this, id); })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
     return ExtendedClient;
 }(Client_1.default));
 exports.default = ExtendedClient;
-//# sourceMappingURL=C:/Dev/carma-api/dist/client/ExtendedClient.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/client/ExtendedClient.js.map

@@ -1,6 +1,5 @@
 import * as SA from 'superagent';
 import Client from './Client';
-import { NotificationEvent } from './models';
 export declare type SuperAgentRequestInterceptor = (req: SA.SuperAgentRequest) => SA.SuperAgentRequest;
 export default class ExtendedClient extends Client {
     private _requestInterceptor?;
@@ -12,5 +11,4 @@ export default class ExtendedClient extends Client {
     protected ensureToken(): Promise<void>;
     protected processError(err: any): Error;
     private nullOn404;
-    GetNotificationById(id: string): Promise<NotificationEvent>;
 }

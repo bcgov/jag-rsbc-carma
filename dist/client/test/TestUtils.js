@@ -113,7 +113,7 @@ var TestUtils = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, TestUtils.setupTestFixtures(function (api) { return api.CreateNotification(__assign({}, notif)); })];
+                    case 0: return [4 /*yield*/, TestUtils.setupTestFixtures(function (api) { return api.SendNotification(__assign({}, notif)); })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -140,4 +140,4 @@ afterAll(function (done) { return __awaiter(_this, void 0, void 0, function () {
         return [2 /*return*/];
     });
 }); });
-//# sourceMappingURL=C:/Dev/carma-api/dist/client/test/TestUtils.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/client/test/TestUtils.js.map

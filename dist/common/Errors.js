@@ -49,4 +49,4 @@ var ApiError = /** @class */ (function (_super) {
     return ApiError;
 }(Error));
 exports.ApiError = ApiError;
-//# sourceMappingURL=C:/Dev/carma-api/dist/common/Errors.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/common/Errors.js.map

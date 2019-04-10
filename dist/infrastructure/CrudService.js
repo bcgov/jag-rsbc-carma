@@ -6,4 +6,4 @@ var CrudService = /** @class */ (function () {
     return CrudService;
 }());
 exports.CrudService = CrudService;
-//# sourceMappingURL=C:/Dev/carma-api/dist/infrastructure/CrudService.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/infrastructure/CrudService.js.map

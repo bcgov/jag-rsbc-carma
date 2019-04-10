@@ -167,4 +167,4 @@ var ControllerBase = /** @class */ (function (_super) {
     return ControllerBase;
 }(tsoa_1.Controller));
 exports.default = ControllerBase;
-//# sourceMappingURL=C:/Dev/carma-api/dist/infrastructure/ControllerBase.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/infrastructure/ControllerBase.js.map

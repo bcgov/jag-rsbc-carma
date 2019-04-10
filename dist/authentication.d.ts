@@ -5,7 +5,7 @@ import { Scope } from './common/authentication';
  * siteminder -> extracts user information from siteminder headers
  * jwt -> extracs user information / scopes from JSON Web Token
  */
-export declare type SecurityType = "siteminder" | "jwt";
+export declare type SecurityType = "siteminder" | "jwt" | "basic";
 /**
  * Wrapper around TSOA Security decorator to give us type safety
  *

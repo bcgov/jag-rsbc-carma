@@ -1,6 +1,6 @@
 import * as superAgent from "superagent";
 import { TypedEvent } from '../common/TypedEvent';
-import { NotificationEvent } from "./models";
+import { NotificationEventResponse, NotificationEvent } from "./models";
 export default class Client {
     private _agent;
     private _previousToken;
@@ -70,9 +70,7 @@ export default class Client {
      * @memberof Client
      */
     protected tryRequest<T>(worker: () => Promise<superAgent.Response>): Promise<T>;
-    GetNotifications(): Promise<Array<NotificationEvent>>;
-    CreateNotification(model: NotificationEvent): Promise<NotificationEvent>;
-    GetNotificationById(id: string): Promise<NotificationEvent>;
-    UpdateNotification(id: string, model: NotificationEvent): Promise<NotificationEvent>;
-    DeleteNotification(id: string): Promise<void>;
+    SendNotification(model: NotificationEvent): Promise<NotificationEventResponse>;
+    GetToken(): Promise<any>;
+    Logout(): Promise<any>;
 }

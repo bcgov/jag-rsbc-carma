@@ -50,4 +50,4 @@ process.once('SIGUSR2', function () { return __awaiter(_this, void 0, void 0, fu
         return [2 /*return*/];
     });
 }); });
-//# sourceMappingURL=C:/Dev/carma-api/dist/environment.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/environment.js.map

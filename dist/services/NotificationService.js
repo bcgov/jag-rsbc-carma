@@ -53,61 +53,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var typescript_ioc_1 = require("typescript-ioc");
 var ServiceBase_1 = require("../infrastructure/ServiceBase");
+var request = __importStar(require("request-promise-native"));
 var NotificationService = /** @class */ (function (_super) {
     __extends(NotificationService, _super);
     function NotificationService() {
-        var _this = _super.call(this) || this;
-        _this.fieldMap = {
-            assignment_id: 'id',
-            title: 'title',
-            location_id: 'locationId',
-            courtroom_id: 'courtroomId',
-            escort_run_id: 'escortRunId',
-            jail_role_code: 'jailRoleCode',
-            other_assign_code: 'otherAssignCode',
-            work_section_code: 'workSectionId',
-            court_role_code: 'courtRoleId'
-        };
-        return _this;
+        return _super.call(this) || this;
     }
-    NotificationService.prototype.getById = function (id) {
+    NotificationService.prototype.sendNotificationEvent = function (entity) {
         return __awaiter(this, void 0, void 0, function () {
+            var auth;
             return __generator(this, function (_a) {
-                return [2 /*return*/, {}];
-            });
-        });
-    };
-    NotificationService.prototype.getAll = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, []];
-            });
-        });
-    };
-    NotificationService.prototype.update = function (entity) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, {}];
-            });
-        });
-    };
-    NotificationService.prototype.validateNotification = function (entity) {
-    };
-    NotificationService.prototype.create = function (entity) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                this.validateNotification(entity);
-                return [2 /*return*/, {}];
-            });
-        });
-    };
-    NotificationService.prototype.delete = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
+                auth = "Basic " + new Buffer(process.env.CARMA_USERNAME + ":" + process.env.CARMA_PASSWORD).toString("base64");
+                return [2 /*return*/, new Promise(function (resolve) {
+                        request.post({
+                            url: process.env.CARMA_URL,
+                            headers: { Authorization: auth }
+                        }).then(function (result) {
+                            console.log(result);
+                            resolve({
+                                respCd: 0,
+                                respMsg: "success"
+                            });
+                        }).catch(function (error) {
+                            resolve({
+                                respCd: 1,
+                                respMsg: JSON.stringify(error)
+                            });
+                        });
+                    })];
             });
         });
     };
@@ -118,4 +101,4 @@ var NotificationService = /** @class */ (function (_super) {
     return NotificationService;
 }(ServiceBase_1.ServiceBase));
 exports.NotificationService = NotificationService;
-//# sourceMappingURL=C:/Dev/carma-api/dist/services/NotificationService.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/services/NotificationService.js.map

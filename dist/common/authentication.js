@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var SCOPE_ASSERTION_MESSAGE = "JWT did not have required scope for this action";
-var SITEMINDER_AUTH_ERROR_MESSAGE = "Couldn't authenticate request.";
-exports.SITEMINDER_AUTH_ERROR = new Error(SITEMINDER_AUTH_ERROR_MESSAGE);
+var AUTH_ERROR_MESSAGE = "Couldn't authenticate request.";
+exports.AUTH_ERROR = new Error(AUTH_ERROR_MESSAGE);
 exports.JWT_AUTH_ERROR = new Error(SCOPE_ASSERTION_MESSAGE);
 exports.SITEMINDER_HEADER_USERGUID = 'smgov_userguid';
 exports.SITEMINDER_HEADER_USERDISPLAYNAME = 'smgov_userdisplayname';
@@ -63,4 +63,4 @@ function assertAllScopes(payload, scopes) {
     }
 }
 exports.assertAllScopes = assertAllScopes;
-//# sourceMappingURL=C:/Dev/carma-api/dist/common/authentication.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/common/authentication.js.map

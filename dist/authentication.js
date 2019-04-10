@@ -34,6 +34,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -106,6 +122,21 @@ function getTokenPayloadFromHeaders(request) {
     };
 }
 /**
+ * Parses a basic auth token from request headers if they are present
+ * @param {Request} request
+ * @returns {TokenPayload}
+ */
+function getBasicAuthPayloadFromHeaders(request) {
+    var _a = request.headers, headers = _a === void 0 ? {} : _a;
+    var base64Credentials = headers.authorization.split(' ')[1];
+    var credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    var _b = __read(credentials.split(':'), 2), username = _b[0], password = _b[1];
+    return {
+        username: username,
+        password: password,
+    };
+}
+/**
  * The authentication middleware used by TSOA
  * see https://github.com/lukeautry/tsoa#authentication
  *
@@ -118,32 +149,48 @@ function getTokenPayloadFromHeaders(request) {
 function koaAuthentication(request, securityName, securityScopes) {
     if (securityScopes === void 0) { securityScopes = authentication_1.DEFAULT_SCOPES; }
     return __awaiter(this, void 0, void 0, function () {
-        var securityType, scopes, siteminderHeaders, token, payload;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var securityType, scopes, _a, siteminderHeaders, token, payload, basicAuthHeaders;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
                     securityType = securityName;
                     scopes = securityScopes;
-                    if (securityType === 'siteminder') {
-                        siteminderHeaders = getTokenPayloadFromHeaders(request);
-                        if (siteminderHeaders && siteminderHeaders.guid) {
-                            return [2 /*return*/, siteminderHeaders];
-                        }
-                        else {
-                            throw authentication_1.SITEMINDER_AUTH_ERROR;
-                        }
+                    _a = securityType;
+                    switch (_a) {
+                        case 'siteminder': return [3 /*break*/, 1];
+                        case 'jwt': return [3 /*break*/, 2];
+                        case 'basic': return [3 /*break*/, 4];
                     }
-                    if (!(securityType === 'jwt')) return [3 /*break*/, 2];
+                    return [3 /*break*/, 5];
+                case 1:
+                    siteminderHeaders = getTokenPayloadFromHeaders(request);
+                    if (siteminderHeaders && siteminderHeaders.guid) {
+                        return [2 /*return*/, siteminderHeaders];
+                    }
+                    else {
+                        throw authentication_1.AUTH_ERROR;
+                    }
+                    _b.label = 2;
+                case 2:
                     token = request.ctx.cookies.get(authentication_1.TOKEN_COOKIE_NAME);
                     return [4 /*yield*/, token_1.verifyToken(token)];
-                case 1:
-                    payload = _a.sent();
+                case 3:
+                    payload = _b.sent();
                     authentication_1.assertAllScopes(payload, scopes);
                     return [2 /*return*/, payload];
-                case 2: throw new Error('Unknown Security Type');
+                case 4:
+                    basicAuthHeaders = getBasicAuthPayloadFromHeaders(request);
+                    if (basicAuthHeaders && basicAuthHeaders.password == process.env.API_PASSWORD && basicAuthHeaders.username == process.env.API_USERNAME) {
+                        return [2 /*return*/, basicAuthHeaders];
+                    }
+                    else {
+                        throw authentication_1.AUTH_ERROR;
+                    }
+                    return [3 /*break*/, 5];
+                case 5: throw new Error('Unknown Security Type');
             }
         });
     });
 }
 exports.koaAuthentication = koaAuthentication;
-//# sourceMappingURL=C:/Dev/carma-api/dist/authentication.js.map
+//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/authentication.js.map
