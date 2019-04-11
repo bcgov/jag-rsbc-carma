@@ -69,7 +69,7 @@ export function RegisterRoutes(router: any) {
                 {{/each}}
             };
 
-            let validatedArgs: any[] = [];
+            let validatedArgs: any;
             try {
               validatedArgs = getValidatedArgs(args, context);
             } catch (error) {

@@ -195,4 +195,4 @@ function koaAuthentication(request, securityName, securityScopes) {
     });
 }
 exports.koaAuthentication = koaAuthentication;
-//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/authentication.js.map
+//# sourceMappingURL=../src/dist/authentication.js.map

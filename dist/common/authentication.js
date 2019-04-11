@@ -63,4 +63,4 @@ function assertAllScopes(payload, scopes) {
     }
 }
 exports.assertAllScopes = assertAllScopes;
-//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/common/authentication.js.map
+//# sourceMappingURL=../../src/dist/common/authentication.js.map

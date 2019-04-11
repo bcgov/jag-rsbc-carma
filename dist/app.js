@@ -161,4 +161,4 @@ app.on('error', function (err, ctx) {
     console.log(err);
 });
 exports.default = app;
-//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/app.js.map
+//# sourceMappingURL=../src/dist/app.js.map

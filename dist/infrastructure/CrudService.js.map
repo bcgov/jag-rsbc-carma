@@ -1,1 +1,1 @@
-{"version":3,"file":"CrudService.js","sourceRoot":"C:/Dev/jag-rsbc-carma/src/","sources":["infrastructure/CrudService.ts"],"names":[],"mappings":";;AAAA;IAAA;IAMA,CAAC;IAAD,kBAAC;AAAD,CAAC,AAND,IAMC;AANqB,kCAAW"}
+{"version":3,"file":"CrudService.js","sourceRoot":"./src/","sources":["infrastructure/CrudService.ts"],"names":[],"mappings":";;AAAA;IAAA;IAMA,CAAC;IAAD,kBAAC;AAAD,CAAC,AAND,IAMC;AANqB,kCAAW"}

@@ -14,7 +14,7 @@ export declare type SecurityType = "siteminder" | "jwt" | "basic";
  * @param {Scope[]} [scopes=DEFAULT_SCOPES]
  * @returns
  */
-export declare function Security(securityType: SecurityType, scopes?: Scope[]): any;
+export declare function Security(securityType: SecurityType, scopes?: Scope[]): Function;
 /**
  * Sets the Token Cookie
  *

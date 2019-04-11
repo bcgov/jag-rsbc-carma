@@ -10,4 +10,4 @@ app_1.default.listen(PORT).on('listening', function () {
     console.log("Carma API started on port " + PORT + "...");
     console.log("DATE: " + new Date().toString());
 });
-//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/index.js.map
+//# sourceMappingURL=../src/dist/index.js.map

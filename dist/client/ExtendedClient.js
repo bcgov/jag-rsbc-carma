@@ -1,8 +1,11 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -144,4 +147,4 @@ var ExtendedClient = /** @class */ (function (_super) {
     return ExtendedClient;
 }(Client_1.default));
 exports.default = ExtendedClient;
-//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/client/ExtendedClient.js.map
+//# sourceMappingURL=../../src/dist/client/ExtendedClient.js.map

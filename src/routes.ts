@@ -49,13 +49,13 @@ const models: TsoaRoute.Models = {
 
 export function RegisterRoutes(router: any) {
     router.post('/v1/Notifications',
-        authenticateMiddleware([{ "name": "basic" }]),
+        authenticateMiddleware([{ "basic": [] }]),
         async (context, next) => {
             const args = {
                 model: { "in": "body", "name": "model", "required": true, "ref": "NotificationEvent" },
             };
 
-            let validatedArgs: any[] = [];
+            let validatedArgs: any;
             try {
                 validatedArgs = getValidatedArgs(args, context);
             } catch (error) {
@@ -76,13 +76,13 @@ export function RegisterRoutes(router: any) {
             return promiseHandler(controller, promise, context, next);
         });
     router.get('/v1/token',
-        authenticateMiddleware([{ "name": "siteminder" }]),
+        authenticateMiddleware([{ "siteminder": [] }]),
         async (context, next) => {
             const args = {
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
-            let validatedArgs: any[] = [];
+            let validatedArgs: any;
             try {
                 validatedArgs = getValidatedArgs(args, context);
             } catch (error) {
@@ -108,7 +108,7 @@ export function RegisterRoutes(router: any) {
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
-            let validatedArgs: any[] = [];
+            let validatedArgs: any;
             try {
                 validatedArgs = getValidatedArgs(args, context);
             } catch (error) {

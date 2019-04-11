@@ -32,4 +32,4 @@ var CurrentUser = /** @class */ (function () {
     return CurrentUser;
 }());
 exports.CurrentUser = CurrentUser;
-//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/infrastructure/CurrentUser.js.map
+//# sourceMappingURL=../../src/dist/infrastructure/CurrentUser.js.map

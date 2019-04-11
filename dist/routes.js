@@ -93,13 +93,12 @@ var models = {
 };
 function RegisterRoutes(router) {
     var _this = this;
-    router.post('/v1/Notifications', authenticateMiddleware([{ "name": "basic" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
+    router.post('/v1/Notifications', authenticateMiddleware([{ "basic": [] }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
         var args, validatedArgs, currentUserProvider, controller, promise;
         return __generator(this, function (_a) {
             args = {
                 model: { "in": "body", "name": "model", "required": true, "ref": "NotificationEvent" },
             };
-            validatedArgs = [];
             try {
                 validatedArgs = getValidatedArgs(args, context);
             }
@@ -117,13 +116,12 @@ function RegisterRoutes(router) {
             return [2 /*return*/, promiseHandler(controller, promise, context, next)];
         });
     }); });
-    router.get('/v1/token', authenticateMiddleware([{ "name": "siteminder" }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
+    router.get('/v1/token', authenticateMiddleware([{ "siteminder": [] }]), function (context, next) { return __awaiter(_this, void 0, void 0, function () {
         var args, validatedArgs, currentUserProvider, controller, promise;
         return __generator(this, function (_a) {
             args = {
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
-            validatedArgs = [];
             try {
                 validatedArgs = getValidatedArgs(args, context);
             }
@@ -147,7 +145,6 @@ function RegisterRoutes(router) {
             args = {
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
-            validatedArgs = [];
             try {
                 validatedArgs = getValidatedArgs(args, context);
             }
@@ -283,4 +280,4 @@ function RegisterRoutes(router) {
     }
 }
 exports.RegisterRoutes = RegisterRoutes;
-//# sourceMappingURL=C:/Dev/jag-rsbc-carma/dist/routes.js.map
+//# sourceMappingURL=../src/dist/routes.js.map
