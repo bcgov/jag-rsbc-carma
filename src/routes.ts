@@ -129,7 +129,7 @@ export function RegisterRoutes(router: any) {
             return promiseHandler(controller, promise, context, next);
         });
 
-    function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+    function authenticateMiddleware(security: any[] = []) {
         return async (context: any, next: any) => {
             let responded = 0;
             let success = false;
