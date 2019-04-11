@@ -114,7 +114,7 @@
             "displayName": "Git Repository URL",
             "required": true,
             "description": "The URL of the repository with your application sourcecode.",
-            "value": "https://github.com/bcgov/jag-shuber-api"
+            "value": "https://github.com/bcgov/jag-rsbc-carma"
         },
         {
             "name": "GIT_REF",

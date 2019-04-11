@@ -15,6 +15,7 @@ import {
     BasicAuthPayload
 } from './common/authentication';
 import { verifyToken } from './infrastructure/token';
+import { stringify } from 'jest-matcher-utils';
 
 /**
  * The type of security that should be applied to the endpoint.
@@ -92,14 +93,17 @@ function getTokenPayloadFromHeaders(request: Request): TokenPayload {
  * @returns {TokenPayload}
  */
 function getBasicAuthPayloadFromHeaders(request: Request): BasicAuthPayload {
+    const response: BasicAuthPayload = { username: "", password: ""};
     const { headers = {} } = request;
-    const base64Credentials =  headers.authorization.split(' ')[1];
-    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-    const [username, password] = credentials.split(':');
-    return {
-        username: username,
-        password: password,
+    if (headers.authorization)
+    {
+        const base64Credentials =  headers.authorization.split(' ')[1];
+        const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+        const [username, password] = credentials.split(':');
+        response.password = password;
+        response.username = username;
     }
+    return response;
 }
 
 /**

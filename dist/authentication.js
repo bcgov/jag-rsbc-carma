@@ -127,14 +127,16 @@ function getTokenPayloadFromHeaders(request) {
  * @returns {TokenPayload}
  */
 function getBasicAuthPayloadFromHeaders(request) {
+    var response = { username: "", password: "" };
     var _a = request.headers, headers = _a === void 0 ? {} : _a;
-    var base64Credentials = headers.authorization.split(' ')[1];
-    var credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-    var _b = __read(credentials.split(':'), 2), username = _b[0], password = _b[1];
-    return {
-        username: username,
-        password: password,
-    };
+    if (headers.authorization) {
+        var base64Credentials = headers.authorization.split(' ')[1];
+        var credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+        var _b = __read(credentials.split(':'), 2), username = _b[0], password = _b[1];
+        response.password = password;
+        response.username = username;
+    }
+    return response;
 }
 /**
  * The authentication middleware used by TSOA
