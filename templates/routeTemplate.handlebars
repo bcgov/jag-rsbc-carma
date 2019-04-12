@@ -25,6 +25,8 @@ Routes are generated from models and controllers
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { Container, Provider } from 'typescript-ioc';
 import { CurrentUser } from './infrastructure/CurrentUser';
+import Router from 'koa-router';
+import { Context } from 'koa';
 {{#if iocModule}}
 import { iocContainer } from '{{iocModule}}';
 {{/if}}
@@ -55,14 +57,14 @@ const models: TsoaRoute.Models = {
     {{/each}}
 };
 
-export function RegisterRoutes(router: any) {
+export function RegisterRoutes(router: Router) {
     {{#each controllers}}
     {{#each actions}}
         router.{{method}}('{{fullPath}}',
             {{#if security.length}}
             authenticateMiddleware({{json security}}),
             {{/if}}
-            async (context, next) => {
+            async (context: Context, next: () => Promise<any>) => {
             const args = {
                 {{#each parameters}}
                     {{@key}}: {{{json this}}},
@@ -101,14 +103,15 @@ export function RegisterRoutes(router: any) {
     {{/each}}
 
   {{#if useSecurity}}
-  function authenticateMiddleware(security: any[] = []) {
-    return async (context: any, next: any) => {
+  function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+    return async (context: Context, next: () => Promise<any>) => {
         let responded = 0;
         let success = false;
         for (const secMethod of security) {
             try 
             {
-                const user = await koaAuthentication(context.request, secMethod.name, secMethod.scopes)
+                const name = Object.keys(secMethod).shift()!;
+                const user = await koaAuthentication(context.request, name, secMethod[name])
                 // only need to respond once
                 if (!success) {
                     success = true;

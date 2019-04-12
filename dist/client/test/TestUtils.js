@@ -50,14 +50,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var jest_to_match_shape_of_1 = require("jest-to-match-shape-of");
 var ExtendedClient_1 = __importDefault(require("../ExtendedClient"));
 require("../../support/MomentMatchers");
 var authentication_1 = require("../../common/authentication");
-expect.extend({
-    toMatchShapeOf: jest_to_match_shape_of_1.toMatchShapeOf,
-    toMatchOneOf: jest_to_match_shape_of_1.toMatchOneOf
-});
 var TestUtils = /** @class */ (function () {
     function TestUtils() {
     }

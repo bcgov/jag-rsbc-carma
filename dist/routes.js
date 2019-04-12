@@ -166,7 +166,7 @@ function RegisterRoutes(router) {
         var _this = this;
         if (security === void 0) { security = []; }
         return function (context, next) { return __awaiter(_this, void 0, void 0, function () {
-            var e_1, _a, responded, success, security_1, security_1_1, secMethod, user, error_1, e_1_1;
+            var e_1, _a, responded, success, security_1, security_1_1, secMethod, name_1, user, error_1, e_1_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -183,7 +183,8 @@ function RegisterRoutes(router) {
                         _b.label = 3;
                     case 3:
                         _b.trys.push([3, 5, , 6]);
-                        return [4 /*yield*/, authentication_1.koaAuthentication(context.request, secMethod.name, secMethod.scopes)
+                        name_1 = Object.keys(secMethod).shift();
+                        return [4 /*yield*/, authentication_1.koaAuthentication(context.request, name_1, secMethod[name_1])
                             // only need to respond once
                         ];
                     case 4:

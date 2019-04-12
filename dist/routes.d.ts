@@ -1,1 +1,2 @@
-export declare function RegisterRoutes(router: any): void;
+import Router from 'koa-router';
+export declare function RegisterRoutes(router: Router): void;

@@ -1,4 +1,3 @@
-import { toMatchShapeOf, toMatchOneOf } from 'jest-to-match-shape-of';
 import ExtendedClient from '../ExtendedClient';
 import { NotificationEvent } from '../models';
 import { ClientBase } from 'pg';
@@ -11,11 +10,6 @@ import {
     TokenPayload
 } from '../../common/authentication';
 import { NotificationService } from '../../services/NotificationService';
-
-expect.extend({
-    toMatchShapeOf,
-    toMatchOneOf
-});
 
 export default class TestUtils {
 

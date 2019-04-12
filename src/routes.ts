@@ -25,6 +25,8 @@ Routes are generated from models and controllers
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { Container, Provider } from 'typescript-ioc';
 import { CurrentUser } from './infrastructure/CurrentUser';
+import Router from 'koa-router';
+import { Context } from 'koa';
 import { NotificationController } from './controllers/NotificationController';
 import { TokenController } from './controllers/TokenController';
 import { koaAuthentication } from './authentication';
@@ -47,10 +49,10 @@ const models: TsoaRoute.Models = {
     },
 };
 
-export function RegisterRoutes(router: any) {
+export function RegisterRoutes(router: Router) {
     router.post('/v1/Notifications',
         authenticateMiddleware([{ "basic": [] }]),
-        async (context, next) => {
+        async (context: Context, next: () => Promise<any>) => {
             const args = {
                 model: { "in": "body", "name": "model", "required": true, "ref": "NotificationEvent" },
             };
@@ -77,7 +79,7 @@ export function RegisterRoutes(router: any) {
         });
     router.get('/v1/token',
         authenticateMiddleware([{ "siteminder": [] }]),
-        async (context, next) => {
+        async (context: Context, next: () => Promise<any>) => {
             const args = {
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
@@ -103,7 +105,7 @@ export function RegisterRoutes(router: any) {
             return promiseHandler(controller, promise, context, next);
         });
     router.post('/v1/token/delete',
-        async (context, next) => {
+        async (context: Context, next: () => Promise<any>) => {
             const args = {
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
@@ -129,13 +131,14 @@ export function RegisterRoutes(router: any) {
             return promiseHandler(controller, promise, context, next);
         });
 
-    function authenticateMiddleware(security: any[] = []) {
-        return async (context: any, next: any) => {
+    function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+        return async (context: Context, next: () => Promise<any>) => {
             let responded = 0;
             let success = false;
             for (const secMethod of security) {
                 try {
-                    const user = await koaAuthentication(context.request, secMethod.name, secMethod.scopes)
+                    const name = Object.keys(secMethod).shift()!;
+                    const user = await koaAuthentication(context.request, name, secMethod[name])
                     // only need to respond once
                     if (!success) {
                         success = true;

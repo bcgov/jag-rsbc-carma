@@ -15,7 +15,6 @@ import {
     BasicAuthPayload
 } from './common/authentication';
 import { verifyToken } from './infrastructure/token';
-import { stringify } from 'jest-matcher-utils';
 
 /**
  * The type of security that should be applied to the endpoint.
