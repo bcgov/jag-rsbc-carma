@@ -1,9 +1,6 @@
 # jag-rsbc-carma
 Ministry of Attorney General, Road Safety BC CARMA (Case and Records Management Application) API for integration with VIPS
 
-## Project Architecture
-...
-
 ## API Client Installation
 
 This API includes a Typescript / Javascript client within the repo that can be added to your project via
@@ -16,7 +13,22 @@ or
 
 ## Getting Started
 
+### Openshift Deployment
+1) In Openshift console open project CARMA-API (Tools) or (jvv0qm-tools) 
+2) Navigate to Builds > Pipelines using the left pane menu.
+3) Start pipeline to start the deployment.
+4) After the pipeline has finished a deployment to DEV is done by default. 
+5) To deploy to TEST/PROD promote the pipeline as needed.  
+
 ### Development Environment
+
+Setup the .env.dev file in the root folder of the project with the following structure:
+
+API_USERNAME='developer'
+API_PASSWORD='dev'
+CARMA_URL='https://wsgw.dev.jag.gov.bc.ca/carma/cases'
+CARMA_USERNAME='<USERNAME>'
+CARMA_PASSWORD='<PASSWORD>'
 
 ### Debugging
 This project was built using [VS Code](https://code.visualstudio.com/) and as such the debugging flow is built around some mechanisms supported in this specific editor. 
