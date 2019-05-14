@@ -14,8 +14,9 @@ export class NotificationService extends ServiceBase<NotificationEvent> {
         let auth = `Basic ${new Buffer(`${process.env.CARMA_USERNAME}:${process.env.CARMA_PASSWORD}`).toString("base64")}`;
         return new Promise<NotificationEventResponse>((resolve) => {
             request.post({
+                body: entity,
                 url: process.env.CARMA_URL!, 
-                headers: { Authorization: auth } 
+                headers: { Authorization: auth }
             }).then(result => {
                 console.log(result);
                 resolve({
