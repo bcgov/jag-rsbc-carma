@@ -19,18 +19,6 @@ const send = function(options, callback) {
     }
     action.end()
 }
-
-const bodyOf = function(message, callback) {
-    var body = ''
-    message.on('data', (chunk) => {
-        body += chunk
-    });
-    message.on('end', () => {
-        callback(body)
-    });
-}
-
 module.exports = {
-    request:send,
-    bodyOf:bodyOf
+    request:send
 }

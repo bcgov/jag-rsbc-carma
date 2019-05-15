@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const { port } = require('..')
-const { request } = require('../support/request');
+const { request } = require('./support/request');
 
 describe('server', ()=>{
 

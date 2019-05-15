@@ -1,14 +1,14 @@
 const port = 8080
 const url = require('url')
+const https = require('https')
 const { createServer, get } = require('http')
-const { bodyOf } = require('./support/request')
+const { bodyOf } = require('./support/body.of.request')
 const { basic } = require('./support/basic.auth' )
 
 const server = {
     start: function(done) {
         this.internal = createServer((req, response)=>{
             let params = url.parse(req.url)
-            console.log(req.method, params.pathname);
             if (params.pathname == '/notifications') {
                 var expected = basic(process.env.API_USERNAME, process.env.API_PASSWORD)
                 if (req.headers['authorization'] !== expected) {
@@ -27,19 +27,14 @@ const server = {
                                 'content-type': 'application/json'
                             }
                         }
-                        console.log('sending', notification);
-                        const request = require('https').request(notification, (res)=>{
-                            var content = ''
-                            res.on('data', (chunk)=>{
-                                content += chunk
-                            })
-                            res.on('end', ()=>{
+                        const request = https.request(notification, (res)=>{
+                            bodyOf(res, (content)=>{
                                 response.write(content)
                                 response.end()
                             })
                         })
                         request.on('error', (e)=>{
-                            console.log(e)
+                            response.end()
                         })
                         request.write(body)
                         request.end()
