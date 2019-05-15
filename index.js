@@ -37,7 +37,11 @@ const server = {
             }
             else {
                 response.setHeader('content-type', 'application/json')
-                response.write(JSON.stringify({ alive:true, message:'you reached ' + params.pathname }))
+                response.write(JSON.stringify({
+                    alive:true,
+                    version: process.env.OPENSHIFT_BUILD_COMMIT,
+                    message:'you reached ' + params.pathname
+                }))
                 response.end()
             }
         })
