@@ -15,7 +15,10 @@ const server = {
                         host: extractHost(process.env.CARMA_URL),
                         port: extractPort(process.env.CARMA_URL),
                         path: process.env.CARMA_URL,
-                        body: body
+                        body: body,
+                        headers: {
+                            authorization: 'Basic ' + Buffer.from(process.env.CARMA_USERNAME+':'+process.env.CARMA_PASSWORD).toString('base64')
+                        }
                     }
                     request(notification, (err, resp, body)=> {
                         response.write(body)
