@@ -15,15 +15,16 @@ describe('notifications', ()=>{
         },
         body: 'this-content'
     }
-    var carma, sentBody, sentHeaders
+    var carma, sentBody, sentHeaders, sentPath
 
     beforeEach((done)=>{
-        process.env.CARMA_URL = 'http://localhost:5017'
+        process.env.CARMA_URL = 'http://localhost:5017/service'
         process.env.CARMA_USERNAME = 'username'
         process.env.CARMA_PASSWORD = 'password'
         process.env.API_USERNAME = 'check'
         process.env.API_PASSWORD = 'me'
         carma = createServer((request, response)=>{
+            sentPath = request.url
             sentHeaders = request.headers;
             bodyOf(request, (body)=>{
                 sentBody = body
@@ -35,6 +36,14 @@ describe('notifications', ()=>{
     })
     afterEach((done)=>{
         carma.close(done)
+    })
+
+    it('sends to correct path', (done)=>{
+        request(notification, (err, response, body)=> {
+            expect(err).to.equal(null)
+            expect(sentPath).to.equal('/service')
+            done()
+        })
     })
 
     it('returns the received response', (done)=>{

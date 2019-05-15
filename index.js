@@ -1,8 +1,7 @@
 const port = 8080
 const url = require('url')
 const { createServer, get } = require('http')
-const { request, bodyOf } = require('./support/request');
-const { extractHost, extractPort } = require('./support/url')
+const { request, bodyOf } = require('./support/request')
 const { basic } = require('./support/basic.auth' )
 
 const server = {
@@ -19,15 +18,15 @@ const server = {
                     bodyOf(req, (body)=>{
                         var notification = {
                             method: 'POST',
-                            host: extractHost(process.env.CARMA_URL),
-                            port: extractPort(process.env.CARMA_URL),
-                            path: process.env.CARMA_URL,
+                            host: url.parse(process.env.CARMA_URL).hostname,
+                            port: url.parse(process.env.CARMA_URL).port,
+                            path: url.parse(process.env.CARMA_URL).pathname,
                             body: body,
                             headers: {
                                 authorization: basic(process.env.CARMA_USERNAME, process.env.CARMA_PASSWORD),
                                 'content-type': 'application/json'
                             }
-                        }
+                        }                        
                         request(notification, (err, resp, body)=> {
                             response.write(body)
                             response.end()

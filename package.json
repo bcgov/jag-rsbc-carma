@@ -1,23 +1,24 @@
 {
-  "name": "jag-rsbc-carma",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha tests/**/*.spec.js tests/*.spec.js --exit"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bcgov/jag-rsbc-carma.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bcgov/jag-rsbc-carma/issues"
-  },
-  "homepage": "https://github.com/bcgov/jag-rsbc-carma#readme",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.1.4"
-  }
+    "name": "jag-rsbc-carma",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "mocha tests/**/*.spec.js tests/*.spec.js --exit"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/bcgov/jag-rsbc-carma.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/bcgov/jag-rsbc-carma/issues"
+    },
+    "homepage": "https://github.com/bcgov/jag-rsbc-carma#readme",
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "mocha": "^6.1.4"
+    }
 }
