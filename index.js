@@ -3,13 +3,14 @@ const url = require('url')
 const { createServer, get } = require('http')
 const { request, bodyOf } = require('./support/request');
 const { extractHost, extractPort } = require('./support/url')
+const { basic } = require('./support/basic.auth' )
 
 const server = {
     start: function(done) {
         this.internal = createServer((req, response)=>{
             let params = url.parse(req.url)
             if (params.pathname == '/notifications') {
-                var expected = 'Basic ' + Buffer.from(process.env.API_USERNAME+':'+process.env.API_PASSWORD).toString('base64')
+                var expected = basic(process.env.API_USERNAME, process.env.API_PASSWORD)
                 if (req.headers['authorization'] !== expected) {
                     response.statusCode = 401
                     response.end()
@@ -23,7 +24,7 @@ const server = {
                             path: process.env.CARMA_URL,
                             body: body,
                             headers: {
-                                authorization: 'Basic ' + Buffer.from(process.env.CARMA_USERNAME+':'+process.env.CARMA_PASSWORD).toString('base64'),
+                                authorization: basic(process.env.CARMA_USERNAME, process.env.CARMA_PASSWORD),
                                 'content-type': 'application/json'
                             }
                         }
@@ -31,7 +32,7 @@ const server = {
                             response.write(body)
                             response.end()
                         })
-                    })                    
+                    })
                 }
             }
             else {
