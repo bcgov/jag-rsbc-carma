@@ -1,7 +1,14 @@
 const { expect } = require('chai')
-const { createServer } = require('http')
+const { createServer } = require('https')
 const { request, bodyOf } = require('../support/request');
+const fs = require('fs');
 const { port } = require('..')
+
+const options = {
+  key: fs.readFileSync('./tests/client-key.pem'),
+  cert: fs.readFileSync('./tests/client-cert.pem')
+};
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 describe('notifications', ()=>{
 
@@ -23,7 +30,7 @@ describe('notifications', ()=>{
         process.env.CARMA_PASSWORD = 'password'
         process.env.API_USERNAME = 'check'
         process.env.API_PASSWORD = 'me'
-        carma = createServer((request, response)=>{
+        carma = createServer(options, (request, response)=>{
             sentPath = request.url
             sentHeaders = request.headers;
             bodyOf(request, (body)=>{
