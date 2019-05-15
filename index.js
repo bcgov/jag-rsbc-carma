@@ -8,17 +8,23 @@ const server = {
         this.internal = createServer((req, response)=>{
             let params = require('url').parse(req.url)
             if (params.pathname == '/notifications') {
-                var notification = {
-                    method: 'POST',
-                    host: extractHost(process.env.CARMA_URL),
-                    port: extractPort(process.env.CARMA_URL),
-                    path: process.env.CARMA_URL,
-                    body: 'anything'
-                }
-                request(notification, (err, resp, body)=> {
-                    response.write(body)
-                    response.end()
-                })
+                var body = ''
+                req.on('data', (chunk) => {
+                    body += chunk
+                });
+                req.on('end', () => {
+                    var notification = {
+                        method: 'POST',
+                        host: extractHost(process.env.CARMA_URL),
+                        port: extractPort(process.env.CARMA_URL),
+                        path: process.env.CARMA_URL,
+                        body: body
+                    }
+                    request(notification, (err, resp, body)=> {
+                        response.write(body)
+                        response.end()
+                    })
+                });
             }
             else {
                 response.setHeader('content-type', 'application/json')
