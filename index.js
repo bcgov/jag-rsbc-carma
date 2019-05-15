@@ -6,17 +6,23 @@ const { bodyOf } = require('./support/body.of.request')
 const { basic } = require('./support/basic.auth' )
 
 const server = {
+    flush: function(response, observer) {
+        response.end()
+        console.log(observer)
+    },
     start: function(done) {
         this.internal = createServer((req, response)=>{
+            let observer = { id:new Date().getTime(), headers:req.headers, url:req.url }
             let params = url.parse(req.url)
             if (params.pathname == '/notifications') {
                 var expected = basic(process.env.API_USERNAME, process.env.API_PASSWORD)
                 if (req.headers['authorization'] !== expected) {
                     response.statusCode = 401
-                    response.end()
+                    this.flush(response, observer)
                 }
                 else {
                     bodyOf(req, (body)=>{
+                        observer.body = body
                         var notification = {
                             method: 'POST',
                             host: url.parse(process.env.CARMA_URL).hostname,
@@ -27,14 +33,17 @@ const server = {
                                 'content-type': 'application/json'
                             }
                         }
+                        observer.sending = notification
                         const request = https.request(notification, (res)=>{
                             bodyOf(res, (content)=>{
+                                observer.answer = content
                                 response.write(content)
-                                response.end()
+                                this.flush(response, observer)
                             })
                         })
                         request.on('error', (e)=>{
-                            response.end()
+                            observer.error = e
+                            this.flush(response, observer)
                         })
                         request.write(body)
                         request.end()
@@ -42,13 +51,15 @@ const server = {
                 }
             }
             else {
-                response.setHeader('content-type', 'application/json')
-                response.write(JSON.stringify({
+                let answer = {
                     alive:true,
                     version: process.env.OPENSHIFT_BUILD_COMMIT,
                     message:'you reached ' + params.pathname
-                }))
-                response.end()
+                }
+                observer.answer = answer
+                response.setHeader('content-type', 'application/json')
+                response.write(JSON.stringify(answer))
+                this.flush(response, observer)
             }
         })
         this.internal.listen(port, done);
