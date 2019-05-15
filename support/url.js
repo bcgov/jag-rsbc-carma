@@ -1,18 +1,14 @@
+var extractHostAndPort = function(url) {
+    return url.split('/')[2]
+}
+
 var extractHost = function(url) {
-    var value = url.substring(url.indexOf('://')+3)
-    if (value.indexOf(':') != -1) {
-        return value.substring(0, value.indexOf(':'))
-    }
-    if (value.indexOf('/') != -1) {
-        return value.substring(0, value.indexOf('/'))
-    }
-    return value
+    return extractHostAndPort(url).split(':')[0]
 }
 var extractPort = function(url) {
-    var value = url.substring(url.indexOf('://')+3)
-    value = value.substring(value.indexOf(':')+1)
-    var port = parseInt(value)
-    return isNaN(port) ? 80 : port
+    var candidate = extractHostAndPort(url).split(':')[1]
+
+    return isNaN(candidate)? 80 : parseInt(candidate)
 }
 
 module.exports = {
