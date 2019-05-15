@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/*.spec.js --tineout 0 --exit"
+    "test": "mocha tests/*.spec.js --exit"
   },
   "repository": {
     "type": "git",
