@@ -10,16 +10,21 @@ describe('notifications', ()=>{
         host: 'localhost',
         port: port,
         path: '/notifications',
+        headers: {
+            authorization: 'Basic ' + Buffer.from('check:me').toString('base64')
+        },
         body: 'this-content'
     }
-    var carma, sentBody, sentAuthorization
+    var carma, sentBody, sentHeaders
 
     beforeEach((done)=>{
         process.env.CARMA_URL = 'http://localhost:5017'
         process.env.CARMA_USERNAME = 'username'
         process.env.CARMA_PASSWORD = 'password'
+        process.env.API_USERNAME = 'check'
+        process.env.API_PASSWORD = 'me'
         carma = createServer((request, response)=>{
-            sentAuthorization = request.headers['authorization'];
+            sentHeaders = request.headers;
             bodyOf(request, (body)=>{
                 sentBody = body
                 response.write('hello world')
@@ -48,12 +53,43 @@ describe('notifications', ()=>{
         })
     })
 
-    it('connects with basic auth', (done)=>{
+    it('specifies json-type body', (done)=>{
         request(notification, (err, response, body)=> {
             expect(err).to.equal(null)
-            expect(sentAuthorization).to.equal('Basic ' + Buffer.from('username:password').toString('base64'))
+            expect(sentHeaders['content-type']).to.equal('application/json')
             done()
         })
     })
+
+    it('connects with basic auth', (done)=>{
+        request(notification, (err, response, body)=> {
+            expect(err).to.equal(null)
+            expect(sentHeaders['authorization']).to.equal('Basic ' + Buffer.from('username:password').toString('base64'))
+            done()
+        })
+    })
+
+    it('requires basic auth', (done)=>{
+        notification.headers['authorization'] = 'Basic ' + Buffer.from('unknown:unknown').toString('base64')
+        request(notification, (err, response, body)=> {
+            expect(response.statusCode).to.equal(401)
+            done()
+        })
+    })
+
+    it('resists missing basic auth header', (done)=>{
+        notification = {
+            method: 'POST',
+            host: 'localhost',
+            port: port,
+            path: '/notifications',
+            body: 'this-content'
+        }
+        request(notification, (err, response, body)=> {
+            expect(response.statusCode).to.equal(401)
+            done()
+        })
+    })
+
 
 })

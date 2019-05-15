@@ -9,22 +9,30 @@ const server = {
         this.internal = createServer((req, response)=>{
             let params = url.parse(req.url)
             if (params.pathname == '/notifications') {
-                bodyOf(req, (body)=>{
-                    var notification = {
-                        method: 'POST',
-                        host: extractHost(process.env.CARMA_URL),
-                        port: extractPort(process.env.CARMA_URL),
-                        path: process.env.CARMA_URL,
-                        body: body,
-                        headers: {
-                            authorization: 'Basic ' + Buffer.from(process.env.CARMA_USERNAME+':'+process.env.CARMA_PASSWORD).toString('base64')
+                var expected = 'Basic ' + Buffer.from(process.env.API_USERNAME+':'+process.env.API_PASSWORD).toString('base64')
+                if (req.headers['authorization'] !== expected) {
+                    response.statusCode = 401
+                    response.end()
+                }
+                else {
+                    bodyOf(req, (body)=>{
+                        var notification = {
+                            method: 'POST',
+                            host: extractHost(process.env.CARMA_URL),
+                            port: extractPort(process.env.CARMA_URL),
+                            path: process.env.CARMA_URL,
+                            body: body,
+                            headers: {
+                                authorization: 'Basic ' + Buffer.from(process.env.CARMA_USERNAME+':'+process.env.CARMA_PASSWORD).toString('base64'),
+                                'content-type': 'application/json'
+                            }
                         }
-                    }
-                    request(notification, (err, resp, body)=> {
-                        response.write(body)
-                        response.end()
-                    })
-                })
+                        request(notification, (err, resp, body)=> {
+                            response.write(body)
+                            response.end()
+                        })
+                    })                    
+                }
             }
             else {
                 response.setHeader('content-type', 'application/json')
