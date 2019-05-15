@@ -1,18 +1,15 @@
+const port = 8080
+const url = require('url')
 const { createServer, get } = require('http')
-const { request } = require('./support/request');
+const { request, bodyOf } = require('./support/request');
 const { extractHost, extractPort } = require('./support/url')
-const port = 5050
 
 const server = {
     start: function(done) {
         this.internal = createServer((req, response)=>{
-            let params = require('url').parse(req.url)
+            let params = url.parse(req.url)
             if (params.pathname == '/notifications') {
-                var body = ''
-                req.on('data', (chunk) => {
-                    body += chunk
-                });
-                req.on('end', () => {
+                bodyOf(req, (body)=>{
                     var notification = {
                         method: 'POST',
                         host: extractHost(process.env.CARMA_URL),
@@ -24,7 +21,7 @@ const server = {
                         response.write(body)
                         response.end()
                     })
-                });
+                })
             }
             else {
                 response.setHeader('content-type', 'application/json')

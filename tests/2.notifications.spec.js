@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const { createServer } = require('http')
-const { request } = require('../support/request');
+const { request, bodyOf } = require('../support/request');
 const { port } = require('..')
 
 describe('notifications', ()=>{
@@ -17,14 +17,11 @@ describe('notifications', ()=>{
     beforeEach((done)=>{
         process.env.CARMA_URL = 'http://localhost:5017'
         carma = createServer((request, response)=>{
-            sentBody = ''
-            request.on('data', (chunk) => {
-                sentBody += chunk
-            });
-            request.on('end', () => {
+            bodyOf(request, (body)=>{
+                sentBody = body
                 response.write('hello world')
-                response.end();
-            });
+                response.end()
+            })
         })
         carma.listen(5017, done);
     })
