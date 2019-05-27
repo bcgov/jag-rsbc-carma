@@ -1,0 +1,40 @@
+{
+    "kind": "BuildConfig",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "carma-vip-adaptor"
+    },
+    "spec": {
+        "triggers": [
+            {
+                "type": "ImageChange"
+            },
+            {
+                "type": "ConfigChange"
+            }
+        ],
+        "source": {
+            "type": "Git",
+            "git": {
+                "uri": "https://github.com/bcgov/jag-rsbc-carma",
+                "ref": "master"
+            }
+        },
+        "strategy": {
+            "type": "Source",
+            "sourceStrategy": {
+                "from": {
+                    "kind": "ImageStreamTag",
+                    "namespace": "openshift",
+                    "name": "nodejs:10"
+                }
+            }
+        },
+        "output": {
+            "to": {
+                "kind": "ImageStreamTag",
+                "name": "carma-vip-adaptor:latest"
+            }
+        }
+    }
+}
