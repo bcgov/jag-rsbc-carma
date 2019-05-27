@@ -2,7 +2,10 @@
     "kind": "BuildConfig",
     "apiVersion": "v1",
     "metadata": {
-        "name": "carma-vip-adaptor"
+        "name": "carma-vip-adaptor",
+        "labels": {
+            "app": "carma-vip-adaptor"
+        }
     },
     "spec": {
         "triggers": [
