@@ -1,0 +1,20 @@
+{
+    "kind": "ImageStream",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "carma-vip-adaptor",
+        "labels": {
+            "app": "carma-vip-adaptor"
+        }
+    },
+    "spec": {
+        "lookupPolicy": {
+            "local": false
+        },
+        "tags": [
+            {
+                "name": "latest"
+            }
+        ]
+    }
+}

@@ -1,123 +1,24 @@
 {
-  "name": "carma-api",
-  "version": "1.0.0",
-  "description": "Carma System Api",
-  "main": "dist/client/index",
-  "typings": "dist/client/index",
-  "repository": "git@github.com:bcgov/carma-api.git",
-  "author": "Tiago Graf <tiago.graf@aot-technologies.com>",
-  "license": "Apache",
-  "watch": {
-    "generate": {
-      "patterns": [
-        "src/controllers/*",
-        "src/models/*",
-        "src/index.ts",
-        "src/app.ts",
-        "templates/*"
-      ],
-      "extensions": "ts,handlebars",
-      "quiet": true,
-      "delay": 500
+    "name": "jag-rsbc-carma",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "mocha tests/**/*.spec.js tests/*.spec.js --exit"
     },
-    "build": {
-      "patterns": [
-        "src/**"
-      ],
-      "ignore": [
-        "*.spec.ts"
-      ],
-      "extensions": "ts",
-      "quiet": true,
-      "delay": 2000
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/bcgov/jag-rsbc-carma.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/bcgov/jag-rsbc-carma/issues"
+    },
+    "homepage": "https://github.com/bcgov/jag-rsbc-carma#readme",
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "mocha": "^6.1.4"
     }
-  },
-  "scripts": {
-    "start": "export TZ=Etc/UTC && node ./dist/index.js",
-    "start:dev": "nodemon --config nodemon.dev.json",
-    "start:testing": "nodemon --config nodemon.testing.json",
-    "build": "./node_modules/.bin/tsc",
-    "build:watch": "npm-watch",
-    "rebuild": "del-cli 'dist/**/*' '!dist/.gitignore' && yarn generate && yarn build",
-    "test": "node --inspect=9230 scripts/test.js --env=node",
-    "test:coverage": "yarn test --coverage",
-    "generate": "tsoa swagger && tsoa routes && swagger-ts-client",
-    "watch:dev": "concurrently --names 'GENERATE,SERVER,BUILD' -c 'bgBlue.bold,bgMagenta.bold,bgGreen.bold' \"npm-watch generate\" \"yarn start:dev\" \"npm-watch build\"",
-    "watch:testing": "concurrently --names 'GENERATE,SERVER' -c 'bgBlue.bold,bgMagenta.bold' \"npm-watch generate\"  \"yarn start:testing\" ",
-    "oc:dev": "nodemon --ignore node_modules/ dist/index.js --inspect=$DEBUG_PORT"
-  },
-  "dependencies": {
-    "dotenv": "^5.0.1",
-    "jsonwebtoken": "^8.3.0",
-    "jwt-decode": "^2.2.0",
-    "koa": "^2.5.0",
-    "koa-bodyparser": "^4.2.0",
-    "koa-morgan": "^1.0.1",
-    "koa-router": "^7.4.0",
-    "moment": "^2.22.1",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.7",
-    "superagent": "^3.8.3",
-    "superagent-prefix": "^0.0.2",
-    "superagent-use": "^0.1.0",
-    "tsoa": "^2.3.81",
-    "typescript-ioc": "^1.2.4",
-    "uuid": "^3.2.1"
-  },
-  "devDependencies": {
-    "@types/dotenv": "^4.0.3",
-    "@types/jest": "^22.2.3",
-    "@types/jest-matcher-utils": "^21.0.1",
-    "@types/jsonwebtoken": "^7.2.8",
-    "@types/jwt-decode": "^2.2.1",
-    "@types/koa": "^2.0.45",
-    "@types/koa-router": "^7.0.28",
-    "@types/node": "^9.6.6",
-    "@types/request": "^2.48.1",
-    "@types/request-promise-native": "^1.0.15",
-    "@types/superagent": "^3.8.2",
-    "@types/uuid": "^3.4.3",
-    "concurrently": "^3.5.1",
-    "del-cli": "^1.1.0",
-    "handlebars-helper-equal": "^1.0.0",
-    "jest": "^24.7.1",
-    "nodemon": "^1.17.3",
-    "npm-watch": "^0.3.0",
-    "openbrowser": "^1.0.2",
-    "swagger-ts-client": "^0.9.6",
-    "ts-jest": "^24.0.2",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.9.1",
-    "typescript": "^3.4.3"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}"
-    ],
-    "setupTestFrameworkScriptFile": "<rootDir>/config/jestSetup.js",
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-      "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
-    ],
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$"
-    ],
-    "moduleFileExtensions": [
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "web.js",
-      "js",
-      "web.jsx",
-      "jsx",
-      "json",
-      "node"
-    ]
-  }
 }
