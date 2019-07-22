@@ -5,18 +5,9 @@ const { bodyOf } = require('../support/body.of.request')
 const { certificate } = require('./support/certificate')
 const { port } = require('..')
 
-describe('notifications', ()=>{
+describe('notifications API', ()=>{
 
-    var notification = {
-        method: 'POST',
-        host: 'localhost',
-        port: port,
-        path: '/carma/v1/sendNotification',
-        headers: {
-            authorization: 'Basic ' + Buffer.from('check:me').toString('base64')
-        },
-        body: 'this-content'
-    }
+    var notification
     var carma, sentBody, sentHeaders, sentPath
 
     beforeEach((done)=>{
@@ -34,24 +25,59 @@ describe('notifications', ()=>{
                 response.end()
             })
         })
-        carma.listen(5017, done);
+        carma.listen(5017, ()=>{
+            notification = {
+                method: 'POST',
+                host: 'localhost',
+                port: port,
+                path: '/carma/v1/sendNotification',
+                headers: {
+                    authorization: 'Basic ' + Buffer.from('check:me').toString('base64')
+                },
+                body: 'this-content'
+            }
+            done()
+        })
     })
     afterEach((done)=>{
         carma.close(done)
+    })
+
+    it('requires basic auth', (done)=>{
+        notification.headers['authorization'] = 'Basic ' + Buffer.from('someone:not-me').toString('base64')
+        request(notification, (err, response, body)=> {
+            expect(response.statusCode).to.equal(401)
+            done()
+        })
+    })
+
+    it('resists missing basic auth header', (done)=>{
+        notification = {
+            method: 'POST',
+            host: 'localhost',
+            port: port,
+            path: '/carma/v1/sendNotification',
+            body: 'this-content'
+        }
+        request(notification, (err, response, body)=> {
+            expect(response.statusCode).to.equal(401)
+            done()
+        })
+    })
+
+    it('returns the received response as json', (done)=>{
+        request(notification, (err, response, body)=> {
+            expect(err).to.equal(null)
+            expect(response.headers['content-type']).to.equal('application/json')
+            expect(body).to.equal(JSON.stringify({ message:'hello world' }))
+            done()
+        })
     })
 
     it('sends to correct path', (done)=>{
         request(notification, (err, response, body)=> {
             expect(err).to.equal(null)
             expect(sentPath).to.equal('/service')
-            done()
-        })
-    })
-
-    it('returns the received response', (done)=>{
-        request(notification, (err, response, body)=> {
-            expect(err).to.equal(null)
-            expect(body).to.equal('hello world')
             done()
         })
     })
@@ -79,28 +105,4 @@ describe('notifications', ()=>{
             done()
         })
     })
-
-    it('requires basic auth', (done)=>{
-        notification.headers['authorization'] = 'Basic ' + Buffer.from('unknown:unknown').toString('base64')
-        request(notification, (err, response, body)=> {
-            expect(response.statusCode).to.equal(401)
-            done()
-        })
-    })
-
-    it('resists missing basic auth header', (done)=>{
-        notification = {
-            method: 'POST',
-            host: 'localhost',
-            port: port,
-            path: '/carma/v1/sendNotification',
-            body: 'this-content'
-        }
-        request(notification, (err, response, body)=> {
-            expect(response.statusCode).to.equal(401)
-            done()
-        })
-    })
-
-
 })
