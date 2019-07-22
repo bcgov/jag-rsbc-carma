@@ -14,7 +14,7 @@ const server = {
         this.internal = createServer((req, response)=>{
             let observer = { id:new Date().getTime(), headers:req.headers, url:req.url }
             let params = url.parse(req.url)
-            if (params.pathname == '/notifications') {
+            if (params.pathname == '/carma/v1/sendNotification') {
                 var expected = basic(process.env.API_USERNAME, process.env.API_PASSWORD)
                 if (req.headers['authorization'] !== expected) {
                     response.statusCode = 401

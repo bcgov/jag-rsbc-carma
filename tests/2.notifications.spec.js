@@ -11,7 +11,7 @@ describe('notifications', ()=>{
         method: 'POST',
         host: 'localhost',
         port: port,
-        path: '/notifications',
+        path: '/carma/v1/sendNotification',
         headers: {
             authorization: 'Basic ' + Buffer.from('check:me').toString('base64')
         },
@@ -93,7 +93,7 @@ describe('notifications', ()=>{
             method: 'POST',
             host: 'localhost',
             port: port,
-            path: '/notifications',
+            path: '/carma/v1/sendNotification',
             body: 'this-content'
         }
         request(notification, (err, response, body)=> {
