@@ -33,6 +33,5 @@ module.exports = {
 }
 
 server.start(()=>{ 
-    console.log('DEBUG2 listening on port', port)
-    console.log('DEBUG2: Dev Build 20200427 1000')
+    console.log('listening on port', port)    
 })
