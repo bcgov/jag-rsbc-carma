@@ -1,3 +1,11 @@
+if (process.env.NODE_ENV !== 'production') {
+    console.log('loading local config')
+    require('dotenv').config();
+  }   
+
+//502 Error Fix?
+//require('https').globalAgent.options.ca = require('ssl-root-cas/latest').create();
+  
 const port = 8080
 const { createServer } = require('http')
 const {
@@ -24,6 +32,7 @@ module.exports = {
     port:port
 }
 
-server.start(()=>{
+server.start(()=>{ 
     console.log('listening on port', port)
+    console.log('DEBUG: Dev Build 20200427 1000')
 })
