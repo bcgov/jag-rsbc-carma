@@ -1,5 +1,7 @@
 # CARMA-VIPS OpenShift Integration
 
+![Lifecycle:Stable](https://img.shields.io/badge/Lifecycle-Stable-97ca00)
+
 An integration for the Ministry of Attorney General, Road Safety BC. This application sits between Case and Records Management Application(CARMA), and Vehicle Impound and Prohibition System(VIPS).
 
 ## Integration details
