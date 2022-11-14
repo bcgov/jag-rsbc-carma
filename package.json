@@ -19,11 +19,11 @@
     "homepage": "https://github.com/bcgov/jag-rsbc-carma#readme",
     "devDependencies": {
         "chai": "^4.2.0",
-        "mocha": "^6.1.4"
+        "mocha": ">=6.1.4"
     },
     "dependencies": {
-        "dotenv": "^8.2.0",
-        "moment": "^2.24.0",
+        "dotenv": "^8.6.0",
+        "moment": "^2.29.4",
         "splunk-logging": "^0.10.1",
         "uuid": "^3.4.0"
     }
