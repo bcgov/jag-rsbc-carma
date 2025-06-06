@@ -44,7 +44,7 @@ See implementation details in [pong.js](lib/pong.js)
 
 You must install the following project:
 
-- [nodejs](https://nodejs.org/en/) - Production uses v10, ensure compatibility from your local environment.
+- [nodejs](https://nodejs.org/en/) - Production uses v22, ensure compatibility from your local environment.
 
 ### Getting started
 
