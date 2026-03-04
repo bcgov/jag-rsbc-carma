@@ -1,0 +1,83 @@
+name: Tag & Push CARMA VIP Adapter to Test
+permissions:
+  contents: write
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: carma-vip-adapter
+  WORKING_DIRECTORY: .
+  IMAGE_TAG: test
+  BRANCH_NAME: test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Artifactory
+        uses: docker/login-action@v1
+        with:
+          registry: artifacts.developer.gov.bc.ca
+          username: ${{ secrets.CARMA_ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.CARMA_ARTIFACTORY_PASSWORD }}
+
+      # Get SHORT_SHA to tag images
+      - name: Get short SHA
+        id: short_sha
+        run: |
+          echo "::set-output name=SHORT_SHA::$(git rev-parse --short HEAD)"
+          echo "Short SHA: $SHORT_SHA"
+
+      - name: Docker Build CARMA VIP Adapter Image
+        working-directory: ${{env.WORKING_DIRECTORY}}
+        run: |
+          docker pull artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:dev
+          docker tag artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:dev artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+  
+      - name: Docker Push to Artifactory
+        id: publish
+        run: |
+          docker push artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+      
+      - name: Set GitOps SSH Key
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSHKEY }}
+
+      - name: Update Helm Values and Commit
+        id: helm
+        run: |
+          
+          # Commit and push the changes
+          git config --global user.email "actions@github.com"
+          git config --global user.name "CARMA VIP Adapter GitHub Actions"
+          git clone -b ${{ env.BRANCH_NAME }} --single-branch git@github.com:bcgov-c/tenant-gitops-973905.git
+          
+          # Navigate to the directory containing your Helm values file for the environment develop -> DEV, test -> test
+          cd tenant-gitops-973905/charts
+
+          # Update the Helm values file with the new image tag and version
+          DATETIME=$(date +'%Y-%m-%d %H:%M:%S')  # Get current date and time
+
+          sed -i "s/tag: .*/tag: ${{ env.IMAGE_TAG }} # Image Updated on $DATETIME/" ../deploy/test_values.yaml
+          sed -i "s/version: .*/version: ${{ steps.short_sha.outputs.SHORT_SHA }} # Version Updated on $DATETIME/" ../deploy/test_values.yaml
+          
+          git add .
+          
+          git add ../deploy/test_values.yaml
+          
+          # Repackage Helm Chart      
+
+          cd gitops
+
+          helm dependency build
+          
+          cd charts
+
+          git add .
+          
+          git commit -m "Update TEST CARMA VIP Adapter image tag"
+          git push origin ${{ env.BRANCH_NAME }} # Update the branch name as needed
