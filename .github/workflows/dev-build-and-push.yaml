@@ -11,8 +11,6 @@ env:
   WORKING_DIRECTORY: .
   IMAGE_TAG: dev
   BRANCH_NAME: develop
-  BUILD_IMAGE_NAME: carma-vip-adapter
-  BUILD_VERSION: dev
 
 jobs:
   build:
@@ -38,7 +36,7 @@ jobs:
       - name: Docker Build CARMA VIP Adapter Image
         working-directory: ${{env.WORKING_DIRECTORY}}
         run: |
-          docker build -t artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+          docker build --build-arg BUILD_IMAGE_NAME=carma-vip-adaptor --build-arg BUILD_VERSION=dev -t artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
   
       - name: Docker Push to Artifactory
         id: publish
