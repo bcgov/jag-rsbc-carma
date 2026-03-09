@@ -34,13 +34,13 @@ jobs:
       - name: Docker Build CARMA VIP Adapter Image
         working-directory: ${{env.WORKING_DIRECTORY}}
         run: |
-          docker pull artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:test
-          docker tag artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:test artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker pull artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:test
+          docker tag artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:test artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
   
       - name: Docker Push to Artifactory
         id: publish
         run: |
-          docker push artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
       
       - name: Set GitOps SSH Key
         uses: webfactory/ssh-agent@v0.5.4

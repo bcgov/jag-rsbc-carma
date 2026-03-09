@@ -36,19 +36,19 @@ jobs:
       - name: Docker Build CARMA VIP Adapter Image
         working-directory: ${{env.WORKING_DIRECTORY}}
         run: |
-          docker build -t artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+          docker build -t artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
   
       - name: Docker Push to Artifactory
         id: publish
         run: |
-          docker push artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           
         #   Run Vulnerability Scan usinig Trivy scanner
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
-          image-ref: artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          image-ref: artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           format: 'table'
           ignore-unfixed: true
           limit-severities-for-sarif: true
