@@ -1,0 +1,152 @@
+# ======================================================================================
+#  Last Updated: 2025-12-03
+#
+#  Description:
+#  Promotes images by re-tagging them within the OpenShift ImageStream.
+#  This in-cluster promotion guarantees image digest is preserved.
+#  Includes production safeguards with backup and validation.
+#
+# ======================================================================================
+
+name: Promote - Test to Prod
+
+# --- TRIGGERS -----------------------------------------------------------------------
+on:
+  # This workflow is triggered manually, requiring explicit user action.
+  workflow_dispatch:
+    inputs:
+      source_tag:
+        description: "The source tag to promote (e.g., test, or a specific shortsha tag)"
+        required: false
+        default: "test"
+
+# --- ENVIRONMENT VARIABLES (Preserving original structure) -------------------------
+env:
+  IMAGE_REGISTRY: ${{ vars.OCP4_REGISTRY }}
+  NAMESPACE: ${{ secrets.OCP4_NAMESPACE }}
+  SOURCE_TAG: ${{ github.event.inputs.source_tag }}
+  TARGET_TAG: "prod"
+  BACKUP_TAG: "prod-backup"
+
+# --- JOBS ---------------------------------------------------------------------------
+jobs:
+  promote-image:
+    name: Promote carma-vip-adaptor to Prod
+    runs-on: ubuntu-latest
+    # Use GitHub Environments for production protection
+    environment:
+      name: production
+      url: https://carma-vip-adaptor-973905-prod.apps.silver.devops.gov.bc.ca
+
+    env:
+      IMAGE_NAME: "carma-vip-adaptor"
+
+    steps:
+      - name: Install OpenShift CLI
+        run: |
+          curl -LO "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz"
+          tar -xzf openshift-client-linux.tar.gz
+          sudo mv oc /usr/local/bin/
+
+      - name: Login to OpenShift
+        run: |
+          oc login --token="${{ secrets.OCP4_PASSWORD }}" --server="${{ secrets.OPENSHIFT_SERVER }}"
+
+      - name: Get source digest
+        id: get_source_digest
+        run: |
+          SOURCE_DIGEST=$(oc get istag ${{ env.IMAGE_NAME }}:${{ env.SOURCE_TAG }} -n ${{ env.NAMESPACE }} -o jsonpath='{.image.metadata.name}')
+          echo "source_digest=$SOURCE_DIGEST" >> $GITHUB_OUTPUT
+          echo "Source image digest: $SOURCE_DIGEST"
+
+      - name: Get target digest (for backup)
+        id: get_target_digest
+        run: |
+          TARGET_DIGEST=$(oc get istag ${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }} -n ${{ env.NAMESPACE }} -o jsonpath='{.image.metadata.name}' 2>/dev/null || echo "")
+          echo "target_digest=$TARGET_DIGEST" >> $GITHUB_OUTPUT
+          if [[ -n "$TARGET_DIGEST" ]]; then
+            echo "Current production image digest: $TARGET_DIGEST"
+          else
+            echo "No existing production image found (first deployment)"
+          fi
+
+      - name: Backup Current Production Image (by digest)
+        if: steps.get_target_digest.outputs.target_digest != ''
+        run: |
+          echo "🔄 Creating backup of current production image..."
+          echo "Backing up current '${{ env.TARGET_TAG }}' image to '${{ env.BACKUP_TAG }}' by digest..."
+          oc tag ${{ env.IMAGE_NAME }}@${{ steps.get_target_digest.outputs.target_digest }} ${{ env.IMAGE_NAME }}:${{ env.BACKUP_TAG }} --reference
+          echo "✅ Backup successful. Production image saved as '${{ env.BACKUP_TAG }}'"
+
+      - name: Promote source to target (by digest)
+        run: |
+          echo "🚀 Promoting '${{ env.SOURCE_TAG }}' to '${{ env.TARGET_TAG }}' by digest for image '${{ env.IMAGE_NAME }}'..."
+          oc tag ${{ env.IMAGE_NAME }}@${{ steps.get_source_digest.outputs.source_digest }} ${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }} --reference
+          echo "✅ Promotion successful."
+
+      - name: Validate Promotion by Comparing Image Digests
+        run: |
+          echo "🔍 Validating promotion for image '${{ env.IMAGE_NAME }}'..."
+          sleep 5
+
+          SOURCE_SHA=$(oc get imagestreamtag ${{ env.IMAGE_NAME }}:${{ env.SOURCE_TAG }} -n ${{ env.NAMESPACE }} -o jsonpath='{.image.metadata.name}')
+          TARGET_SHA=$(oc get imagestreamtag ${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }} -n ${{ env.NAMESPACE }} -o jsonpath='{.image.metadata.name}')
+
+          echo "Source Digest: $SOURCE_SHA"
+          echo "Target Digest: $TARGET_SHA"
+
+          if [[ -z "$SOURCE_SHA" ]]; then
+            echo "::error::Could not find source digest for tag '${{ env.SOURCE_TAG }}' for image '${{ env.IMAGE_NAME }}'."
+            exit 1
+          fi
+
+          if [[ "$SOURCE_SHA" == "$TARGET_SHA" ]]; then
+            echo "✅ Validation successful! Digests match perfectly."
+          else
+            echo "::error::Image digests do not match after promotion for image '${{ env.IMAGE_NAME }}'."
+            exit 1
+          fi
+
+      - name: Wait for Deployment Rollout in Production
+        run: |
+          echo "⏳ Waiting for deployment to rollout in 973905-prod namespace..."
+          echo "This may take several minutes as production has 4 replicas..."
+          oc rollout status dc/${{ env.IMAGE_NAME }} -n 973905-prod --timeout=15m
+
+      - name: Run Production Smoke Tests
+        run: |
+          echo "🧪 Running smoke tests on production environment..."
+          ROUTE=$(oc get route ${{ env.IMAGE_NAME }} -n 973905-prod -o jsonpath='{.spec.host}')
+          echo "Testing endpoint: https://$ROUTE/ping"
+
+          # Test the /ping endpoint
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://$ROUTE/ping)
+
+          if [[ "$RESPONSE" == "200" ]]; then
+            echo "✅ Production smoke test passed! Application is responding correctly."
+          else
+            echo "::error::Production smoke test failed! Expected 200, got $RESPONSE"
+            echo "::error::Consider rolling back using the backup tag: ${{ env.BACKUP_TAG }}"
+            exit 1
+          fi
+
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "======================================================================"
+          echo "🎉 PRODUCTION DEPLOYMENT SUCCESSFUL"
+          echo "======================================================================"
+          echo ""
+          echo "Image: ${{ env.IMAGE_NAME }}"
+          echo "Source Tag: ${{ env.SOURCE_TAG }}"
+          echo "Target Tag: ${{ env.TARGET_TAG }}"
+          echo "Backup Tag: ${{ env.BACKUP_TAG }}"
+          echo ""
+          echo "Deployment Details:"
+          echo "  • Namespace: 973905-prod"
+          echo "  • Replicas: 4"
+          echo "  • Status: All replicas healthy"
+          echo ""
+          echo "To rollback if needed, run:"
+          echo "  oc tag ${{ env.IMAGE_NAME }}:${{ env.BACKUP_TAG }} ${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }} --reference -n ${{ env.NAMESPACE }}"
+          echo "======================================================================"
