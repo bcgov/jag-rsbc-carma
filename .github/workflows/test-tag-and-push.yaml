@@ -1,11 +1,11 @@
-name: Tag & Push CARMA VIP Adapter to Test
+name: Tag & Push CARMA VIP Adaptor to Test
 permissions:
   contents: write
 on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: carma-vip-adapter
+  IMAGE_NAME: carma-vip-adaptor
   WORKING_DIRECTORY: .
   IMAGE_TAG: test
   BRANCH_NAME: test
@@ -31,16 +31,16 @@ jobs:
           echo "::set-output name=SHORT_SHA::$(git rev-parse --short HEAD)"
           echo "Short SHA: $SHORT_SHA"
 
-      - name: Docker Build CARMA VIP Adapter Image
+      - name: Docker Build CARMA VIP Adaptor Image
         working-directory: ${{env.WORKING_DIRECTORY}}
         run: |
-          docker pull artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:dev
-          docker tag artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:dev artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker pull artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:dev
+          docker tag artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:dev artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
   
       - name: Docker Push to Artifactory
         id: publish
         run: |
-          docker push artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
       
       - name: Set GitOps SSH Key
         uses: webfactory/ssh-agent@v0.5.4
@@ -53,7 +53,7 @@ jobs:
           
           # Commit and push the changes
           git config --global user.email "actions@github.com"
-          git config --global user.name "CARMA VIP Adapter GitHub Actions"
+          git config --global user.name "CARMA VIP Adaptor GitHub Actions"
           git clone -b ${{ env.BRANCH_NAME }} --single-branch git@github.com:bcgov-c/tenant-gitops-973905.git
           
           # Navigate to the directory containing your Helm values file for the environment develop -> DEV, test -> test
@@ -79,5 +79,5 @@ jobs:
 
           git add .
           
-          git commit -m "Update TEST CARMA VIP Adapter image tag"
+          git commit -m "Update TEST CARMA VIP Adaptor image tag"
           git push origin ${{ env.BRANCH_NAME }} # Update the branch name as needed

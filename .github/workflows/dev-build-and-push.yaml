@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: carma-vip-adapter
+  IMAGE_NAME: carma-vip-adaptor
   WORKING_DIRECTORY: .
   IMAGE_TAG: dev
   BRANCH_NAME: develop
@@ -33,22 +33,22 @@ jobs:
           echo "::set-output name=SHORT_SHA::$(git rev-parse --short HEAD)"
           echo "Short SHA: $SHORT_SHA"
 
-      - name: Docker Build CARMA VIP Adapter Image
+      - name: Docker Build CARMA VIP Adaptor Image
         working-directory: ${{env.WORKING_DIRECTORY}}
         run: |
-          docker build -t artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+          docker build --build-arg BUILD_IMAGE_NAME=carma-vip-adaptor --build-arg BUILD_VERSION=dev -t artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
   
       - name: Docker Push to Artifactory
         id: publish
         run: |
-          docker push artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           
         #   Run Vulnerability Scan usinig Trivy scanner
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
-          image-ref: artifacts.developer.gov.bc.ca/c973-/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          image-ref: artifacts.developer.gov.bc.ca/c973-carma/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           format: 'table'
           ignore-unfixed: true
           limit-severities-for-sarif: true
@@ -65,7 +65,7 @@ jobs:
           
           # Commit and push the changes
           git config --global user.email "actions@github.com"
-          git config --global user.name "CARMA VIP Adapter GitHub Actions"
+          git config --global user.name "CARMA VIP Adaptor GitHub Actions"
           git clone -b ${{ env.BRANCH_NAME }} --single-branch git@github.com:bcgov-c/tenant-gitops-973905.git
           
           # Navigate to the directory containing your Helm values file for the environment develop -> DEV, test -> test
@@ -94,5 +94,5 @@ jobs:
 
           git add .
           
-          git commit -m "Update Dev CARMA VIP Adapter image tag"
+          git commit -m "Update Dev CARMA VIP Adapt0r image tag"
           git push origin ${{ env.BRANCH_NAME }} # Update the branch name as needed
