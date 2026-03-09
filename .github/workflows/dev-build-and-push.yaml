@@ -11,6 +11,8 @@ env:
   WORKING_DIRECTORY: .
   IMAGE_TAG: dev
   BRANCH_NAME: develop
+  BUILD_IMAGE_NAME: carma-vip-adapter
+  BUILD_VERSION: dev
 
 jobs:
   build:
