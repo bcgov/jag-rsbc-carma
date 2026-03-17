@@ -21,7 +21,7 @@ ARG BUILD_IMAGE_NAME
 ARG BUILD_VERSION
 
 # --- Build Stage ---
-FROM registry.access.redhat.com/ubi8/nodejs-16-minimal:latest AS build
+FROM registry.access.redhat.com/ubi9/nodejs-22-minimal:latest AS build
 ARG BUILD_IMAGE_NAME
 ARG BUILD_VERSION
 
@@ -42,7 +42,7 @@ COPY . .
 RUN chown -R 1001:0 /opt/app-root
 
 # --- Final Runtime Image ---
-FROM registry.access.redhat.com/ubi8/nodejs-16-minimal:latest AS final
+FROM registry.access.redhat.com/ubi9/nodejs-22-minimal:latest AS final
 ARG BUILD_IMAGE_NAME
 ARG BUILD_VERSION
 
