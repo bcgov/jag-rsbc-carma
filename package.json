@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "dotenv": "^16.4.0",
-        "moment": "^2.30.0",
+        "moment": "^2.31.0",
         "splunk-logging": "^0.11.0",
         "uuid": "^11.1.0"
     },
